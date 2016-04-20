@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="CCH_Entities" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+  <EntityContainer Name="CCH_EntitiesContainer" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Compliants" EntityType="CCH_Entities.Compliant" />
+    <EntitySet Name="Representations" EntityType="CCH_Entities.Representation" />
+    <EntitySet Name="Complainants" EntityType="CCH_Entities.Complainant" />
+    <EntitySet Name="Advisors" EntityType="CCH_Entities.Advisor" />
+    <EntitySet Name="BodyCorporates" EntityType="CCH_Entities.BodyCorporate" />
+    <AssociationSet Name="CompliantBodyCorporate" Association="CCH_Entities.CompliantBodyCorporate">
+      <End Role="Compliant" EntitySet="Compliants" />
+      <End Role="BodyCorporate" EntitySet="BodyCorporates" />
+    </AssociationSet>
+    <AssociationSet Name="CompliantComplainant" Association="CCH_Entities.CompliantComplainant">
+      <End Role="Compliant" EntitySet="Compliants" />
+      <End Role="Complainant" EntitySet="Complainants" />
+    </AssociationSet>
+    <AssociationSet Name="ComplainantRepresentation" Association="CCH_Entities.ComplainantRepresentation">
+      <End Role="Complainant" EntitySet="Complainants" />
+      <End Role="Representation" EntitySet="Representations" />
+    </AssociationSet>
+    <AssociationSet Name="RepresentationAdvisor" Association="CCH_Entities.RepresentationAdvisor">
+      <End Role="Representation" EntitySet="Representations" />
+      <End Role="Advisor" EntitySet="Advisors" />
+    </AssociationSet>
+    <EntitySet Name="Countries" EntityType="CCH_Entities.Country" />
+  </EntityContainer>
+  <EntityType Name="Compliant">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SubjectMatter" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Details" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="MatterEscalation" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Purpose" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="PurposedOutcome" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="YearExplanation" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="ConsentToInvestigation" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="DateOfSubmission" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="BodyCorporate" Relationship="CCH_Entities.CompliantBodyCorporate" FromRole="Compliant" ToRole="BodyCorporate" />
+    <NavigationProperty Name="Complainant" Relationship="CCH_Entities.CompliantComplainant" FromRole="Compliant" ToRole="Complainant" />
+  </EntityType>
+  <EntityType Name="Representation">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Proof_of_Rep" Type="String" Nullable="false" />
+    <NavigationProperty Name="Complainant" Relationship="CCH_Entities.ComplainantRepresentation" FromRole="Representation" ToRole="Complainant" />
+    <NavigationProperty Name="Advisor" Relationship="CCH_Entities.RepresentationAdvisor" FromRole="Representation" ToRole="Advisor" />
+  </EntityType>
+  <EntityType Name="Complainant">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Nationality" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="PO_Box" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Tel_Number" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="FaxNumber" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Compliant" Relationship="CCH_Entities.CompliantComplainant" FromRole="Complainant" ToRole="Compliant" />
+    <NavigationProperty Name="Representation" Relationship="CCH_Entities.ComplainantRepresentation" FromRole="Complainant" ToRole="Representation" />
+  </EntityType>
+  <EntityType Name="Advisor">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Address" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="WorkTel" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Cell" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Representation" Relationship="CCH_Entities.RepresentationAdvisor" FromRole="Advisor" ToRole="Representation" />
+  </EntityType>
+  <EntityType Name="BodyCorporate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CountryofOrigin" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Registration_Number" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Body_Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Compliant" Relationship="CCH_Entities.CompliantBodyCorporate" FromRole="BodyCorporate" ToRole="Compliant" />
+  </EntityType>
+  <Association Name="CompliantBodyCorporate">
+    <End Type="CCH_Entities.Compliant" Role="Compliant" Multiplicity="1" />
+    <End Type="CCH_Entities.BodyCorporate" Role="BodyCorporate" Multiplicity="0..1" />
+  </Association>
+  <Association Name="CompliantComplainant">
+    <End Type="CCH_Entities.Compliant" Role="Compliant" Multiplicity="1" />
+    <End Type="CCH_Entities.Complainant" Role="Complainant" Multiplicity="1" />
+  </Association>
+  <Association Name="ComplainantRepresentation">
+    <End Type="CCH_Entities.Complainant" Role="Complainant" Multiplicity="1" />
+    <End Type="CCH_Entities.Representation" Role="Representation" Multiplicity="0..1" />
+  </Association>
+  <Association Name="RepresentationAdvisor">
+    <End Type="CCH_Entities.Representation" Role="Representation" Multiplicity="1" />
+    <End Type="CCH_Entities.Advisor" Role="Advisor" Multiplicity="0..1" />
+  </Association>
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CountryName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+  </EntityType>
+</Schema>

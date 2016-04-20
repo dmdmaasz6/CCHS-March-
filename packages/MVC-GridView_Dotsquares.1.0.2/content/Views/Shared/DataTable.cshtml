@@ -1,0 +1,204 @@
+﻿@model dynamic
+@using DSCMS.Web
+@using DSCMS.Data
+@using System.Management
+@{int j = 0;}
+@{int editFieldNo = 0;}
+@{int srNo = (Model.CurrentPage - 1) * Model.PageSize + 1;}
+
+@foreach (dynamic data in Model.Data)
+{
+    j = 0;
+    editFieldNo = 0;
+    string idForEdit = "";
+    <tr>
+        <td>@srNo</td>
+        @foreach (dynamic column in Model.ColumnNames)
+        {
+            if (editFieldNo == 0)
+            {
+                var nameOfProperty = @column;
+                var propertyInfo = @data.GetType().GetProperty(nameOfProperty);
+                var value = propertyInfo.GetValue(@data, null);
+                idForEdit = Convert.ToString(value);
+            }
+            if (j == 0 && Model.IsEditable == true && editFieldNo > 0)
+            {
+                var nameOfProperty = @column;
+                var propertyInfo = @data.GetType().GetProperty(nameOfProperty);
+                var value = propertyInfo.GetValue(@data, null);
+                <td>
+                    <a href="@Model.EditUrl/@idForEdit">
+                        @value
+                    </a>
+                </td>
+                j++;
+            }
+            else if (editFieldNo > 0)
+            {
+                <td>
+                    @{
+                int columnStartIndex = @column.ToString().LastIndexOf('.');
+                var nameOfProperty = @column;
+                bool classFound = false;
+                string actualTableName = "";
+                var propertyInfo = (dynamic)null;
+                var value = (dynamic)null;
+                string[] parts = (dynamic)null;
+                    }
+                    @{
+                if (columnStartIndex > 0)
+                {
+                    classFound = true;
+                    parts = @column.Split('.');
+                }
+                else
+                {
+                    propertyInfo = @data.GetType().GetProperty(nameOfProperty);
+                    value = propertyInfo.GetValue(@data, null);
+                }
+                    }
+                    @{
+
+                if (classFound)
+                {
+                    var nameOfTable = (dynamic)null;
+                    var objType = (dynamic)null;
+                    var propTable = (dynamic)null;
+                    var tableValue = (dynamic)null;
+                    var dataUnique = data;
+                    for (var i = 0; i <= Convert.ToInt16(parts.Length - 1); i++)
+                    {
+                        nameOfTable = parts[i];
+                        objType = dataUnique.GetType();
+                        propTable = objType.GetProperty(nameOfTable);
+                        tableValue = propTable.GetValue(dataUnique, null);
+                        dataUnique = tableValue;
+                    }
+                    value = dataUnique;
+                }
+                    }
+                    @value
+                </td>
+            }
+            editFieldNo++;
+        }
+        @if (Model.showAction)
+        {
+            <td>
+                @if (Model.showDetailButton)
+                {
+                    <a style="padding:5px;" title="Detail" class="glyphicon glyphicon-search" href="@Model.DetailUrl/@idForEdit"></a>
+                }
+                @if (Model.showEditButton)
+                {
+                    <a style="padding:5px;" title="Edit" class="glyphicon glyphicon-edit" href="@Model.EditUrl/@idForEdit"></a>
+                }
+                @if (Model.showDeleteButton)
+                {
+                    <a style="padding:5px;" title="Delete" class="glyphicon glyphicon-remove-sign" href="@Model.DeleteUrl/@idForEdit"></a>
+                }
+                @if (Model.CustomActionUrl != null)
+                {
+                    foreach (var customField in Model.CustomActionUrl)
+                    {
+                        <a style="padding:5px;" class="@customField.ClassOnButton" title="@customField.LinkName" href="/@customField.UrlName/@idForEdit">@customField.LinkName</a>
+                    }
+                }
+            </td>
+        }
+    </tr>
+        srNo++;
+}
+@{
+    var colspanCustom = Convert.ToInt16(@Model.ColumnNames.Length + 1);
+    if (Model.showAction == false)
+    {
+        colspanCustom -= 1;
+    }
+}
+@if (Model.Data.Count == 0 && Model.PageSize != 40)
+{
+   <tr>
+        <td colspan="@colspanCustom" class="mid_center">
+            No Records Found
+        </td>
+    </tr>
+}
+@if (Model.Data.Count != 0 && Model.PageSize != 40)
+{
+    <tr class="dynamicPager">
+        <td colspan="@colspanCustom">
+            @if (Model.NumberOfPages > DSCMS.Web.Helper.Pager.PagerStart)
+            {
+                if (Model.CurrentPage == 1)
+                {
+                    <a class="page-number btn btn-default active" style="cursor:not-allowed">Previous</a>
+                }
+                else
+                {
+                    <a class="page-number btn btn-default" onclick="searchData(@Model.CurrentPage - 1);">Previous</a>
+                }
+            }
+            @if (Model.NumberOfPages <= DSCMS.Web.Helper.Pager.PagerStart)
+            {
+
+
+                for (int i = 1; i <= Model.NumberOfPages; i++)
+                {
+                    if (Model.CurrentPage == i)
+                    {
+                        <a class="page-number btn btn-default active" style="cursor:not-allowed">@i</a>
+                    }
+                    else
+                    {
+                        <a class="page-number btn btn-default" onclick="searchData(@i);" href="javascript:void(0);">@i</a>
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; i <= DSCMS.Web.Helper.Pager.PagerStart - 1; i++)
+                {
+                    if (Model.CurrentPage == i)
+                    {
+                        <a class="page-number btn btn-default active" style="cursor:not-allowed">@i</a>
+                    }
+                    else
+                    {
+                        <a class="page-number btn btn-default" onclick="searchData(@i);" href="javascript:void(0);">@i</a>
+                    }
+                }
+                <span>...</span>
+                if (Model.CurrentPage == Model.NumberOfPages)
+                {
+                    <a class="page-number btn btn-default  active" onclick="searchData(@Model.NumberOfPages);" style="cursor:not-allowed" href="javascript:void(0);">@Model.NumberOfPages</a>
+                }
+                else
+                {
+                    <a class="page-number btn btn-default" onclick="searchData(@Model.NumberOfPages);" href="javascript:void(0);">@Model.NumberOfPages</a>
+                }
+            }
+            @if (Model.NumberOfPages > DSCMS.Web.Helper.Pager.PagerStart)
+            {
+                if (Model.CurrentPage == Model.NumberOfPages)
+                {
+                    <a class="page-number btn btn-default active" style="cursor:not-allowed">Next</a>
+                }
+                else
+                {
+                    <a class="page-number btn btn-default" onclick="searchData(@Model.CurrentPage + 1);">Next</a>
+                }
+            }
+            @if (Model.NumberOfPages > DSCMS.Web.Helper.Pager.PagerStart)
+            {
+                <div class="pull-right">
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="txtPageNumber" value="@Model.CurrentPage" min="1" />
+                        <span class="input-group-btn"><button class="page-number btn btn-default" oninput="validity.valid || (value = '');" onclick="RenderPage();">Go</button></span>
+                    </div>
+                </div>
+            }
+        </td>
+    </tr>
+}

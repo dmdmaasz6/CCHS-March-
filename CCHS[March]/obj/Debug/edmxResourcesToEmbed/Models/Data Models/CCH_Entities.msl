@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CCH_EntitiesStoreContainer" CdmEntityContainer="CCH_EntitiesContainer">
+    <EntitySetMapping Name="Compliants">
+      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Compliant)">
+        <MappingFragment StoreEntitySet="Compliants">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SubjectMatter" ColumnName="SubjectMatter" />
+          <ScalarProperty Name="Details" ColumnName="Details" />
+          <ScalarProperty Name="MatterEscalation" ColumnName="MatterEscalation" />
+          <ScalarProperty Name="Purpose" ColumnName="Purpose" />
+          <ScalarProperty Name="PurposedOutcome" ColumnName="PurposedOutcome" />
+          <ScalarProperty Name="YearExplanation" ColumnName="YearExplanation" />
+          <ScalarProperty Name="ConsentToInvestigation" ColumnName="ConsentToInvestigation" />
+          <ScalarProperty Name="DateOfSubmission" ColumnName="DateOfSubmission" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Representations">
+      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Representation)">
+        <MappingFragment StoreEntitySet="Representations">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Proof_of_Rep" ColumnName="Proof_of_Rep" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Complainants">
+      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Complainant)">
+        <MappingFragment StoreEntitySet="Complainants">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="Nationality" ColumnName="Nationality" />
+          <ScalarProperty Name="PO_Box" ColumnName="PO_Box" />
+          <ScalarProperty Name="Tel_Number" ColumnName="Tel_Number" />
+          <ScalarProperty Name="FaxNumber" ColumnName="FaxNumber" />
+          <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Advisors">
+      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Advisor)">
+        <MappingFragment StoreEntitySet="Advisors">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="WorkTel" ColumnName="WorkTel" />
+          <ScalarProperty Name="Cell" ColumnName="Cell" />
+          <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BodyCorporates">
+      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.BodyCorporate)">
+        <MappingFragment StoreEntitySet="BodyCorporates">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CountryofOrigin" ColumnName="CountryofOrigin" />
+          <ScalarProperty Name="Registration_Number" ColumnName="Registration_Number" />
+          <ScalarProperty Name="Body_Name" ColumnName="Body_Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Countries">
+      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Country)">
+        <MappingFragment StoreEntitySet="Countries">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="CompliantBodyCorporate" TypeName="CCH_Entities.CompliantBodyCorporate" StoreEntitySet="BodyCorporates">
+      <EndProperty Name="Compliant">
+        <ScalarProperty Name="Id" ColumnName="Compliant_Id" />
+      </EndProperty>
+      <EndProperty Name="BodyCorporate">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CompliantComplainant" TypeName="CCH_Entities.CompliantComplainant" StoreEntitySet="Compliants">
+      <EndProperty Name="Complainant">
+        <ScalarProperty Name="Id" ColumnName="Complainant_Id" />
+      </EndProperty>
+      <EndProperty Name="Compliant">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ComplainantRepresentation" TypeName="CCH_Entities.ComplainantRepresentation" StoreEntitySet="Representations">
+      <EndProperty Name="Complainant">
+        <ScalarProperty Name="Id" ColumnName="Complainant_Id" />
+      </EndProperty>
+      <EndProperty Name="Representation">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="RepresentationAdvisor" TypeName="CCH_Entities.RepresentationAdvisor" StoreEntitySet="Advisors">
+      <EndProperty Name="Representation">
+        <ScalarProperty Name="Id" ColumnName="Representation_Id" />
+      </EndProperty>
+      <EndProperty Name="Advisor">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>

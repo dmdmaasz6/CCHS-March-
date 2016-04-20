@@ -1,0 +1,245 @@
+﻿@model dynamic
+@using System.Web.Script.Serialization;
+@{int editFieldNo = 0;}
+@{int searchFieldNo = 0;}
+
+<thead>
+    <tr>
+        <th valign="top">Sr. No.</th>
+        @if (Model.HeaderNames == null)
+        {
+            foreach (dynamic column in Model.ColumnNames)
+            {
+                if (editFieldNo > 0)
+                {
+                    <th data-sortable="true">
+                        <a href="javascript:void(0);" class="asc-desc sorting" onclick="searchData(1,'@column');" style="color:white; text-decoration:underline">
+                            @column.Replace("_", " ")
+                        </a>
+                    </th>
+
+                }
+                editFieldNo++;
+            }
+            if (Model.showAction == true)
+            {
+                <th valign="top">
+                    Action
+                </th>
+            }
+        }
+        else
+        {
+            for (int i = 0; i < Model.HeaderNames.Length; i++)
+            {
+                for (int j = 0; j < Model.ColumnNames.Length; j++)
+                {
+                    if (editFieldNo > 0)
+                    {
+                        if (i == j)
+                        {
+                            <th valign="top">
+                                <a href="javascript:void(0);" class="asc-desc sorting" onclick="searchData(1,'@Model.ColumnNames[j]');" style="color: white; text-decoration: underline">
+                                    @Model.HeaderNames[i]
+                                </a>
+                            </th>
+                        }
+                    }
+                }
+                editFieldNo++;
+            }
+            if (Model.showAction == true)
+            {
+                <th valign="top">
+                    Action
+                </th>
+            }
+        }
+    </tr>
+    @if (Model.showSearch)
+    {
+        <tr>
+            <th></th>
+            @foreach (dynamic column in Model.ColumnNames)
+            {
+                if (searchFieldNo > 0)
+                {
+                    <th>
+                        <span class="form-inline">
+                            <div class="input-group">
+                                @foreach (dynamic data in Model.Data)
+                                {
+                                    int columnStartIndex = column.ToString().LastIndexOf('.');
+                                    bool classFound = false;
+                                    var nameOfProperty = column;
+                                    string[] parts = (dynamic)null;
+                                    var propertyInfo = (dynamic)null;
+                                    var value = (dynamic)null;
+                                    var valueType = "";
+                                    if (columnStartIndex > 0)
+                                    {
+                                        classFound = true;
+                                        parts = column.Split('.');
+                                    }
+                                    else
+                                    {
+                                        nameOfProperty = column;
+                                        propertyInfo = data.GetType().GetProperty(nameOfProperty);
+                                        value = propertyInfo.GetValue(data, null);
+                                    }
+
+                                    if (classFound)
+                                    {
+                                        var nameOfTable = (dynamic)null;
+                                        var objType = (dynamic)null;
+                                        var propTable = (dynamic)null;
+                                        var tableValue = (dynamic)null;
+                                        var dataUnique = data;
+                                        for (var i = 0; i <= Convert.ToInt16(parts.Length - 1); i++)
+                                        {
+                                            nameOfTable = parts[i];
+                                            objType = dataUnique.GetType();
+                                            propTable = objType.GetProperty(nameOfTable);
+                                            tableValue = propTable.GetValue(dataUnique, null);
+                                            dataUnique = tableValue;
+                                        }
+                                        propertyInfo = propTable;
+                                        value = dataUnique;
+                                    }
+
+                                    try
+                                    {
+                                        valueType = (((propertyInfo.PropertyType).GenericTypeArguments[0])).Name;
+                                    }
+                                    catch
+                                    {
+                                        valueType = "String";
+                                    }
+
+                                    if (valueType.ToString().ToLower().Contains("int") || valueType.ToString().ToLower().Contains("decimal"))
+                                    {
+                                        <input type="number" class=" form-control" id="@column">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-default " onclick="searchData(1, null);" href="javascript:void(0);"><i class="fa fa-search "></i></a>
+                                        </span>
+                                    }
+                                    else if (valueType.ToString().ToLower().Contains("date"))
+                                    {
+                                        <input type="text" class="form-control datepicker" id="@column">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-default " onclick="searchData(1, null);" href="javascript:void(0);"><i class="fa fa-search "></i></a>
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class=" form-control" id="@column" placeholder="">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-default " onclick="searchData(1, null);" href="javascript:void(0);"><i class="fa fa-search "></i></a>
+                                        </span>
+                                    }
+                                    break;
+                                }
+                            </div>
+                        </span>
+                    </th>
+                }
+                searchFieldNo++;
+            }
+            @if (Model.showAction == true)
+            {
+                <th></th>
+            }
+        </tr>
+    }
+</thead>
+<input type="hidden" value="@string.Join(",",Model.ColumnNames)" id="hdnColumns" />
+<input type="hidden" value="" id="hdnOrderByCurrent" />
+<input type="hidden" value="1" id="hdnOrderByAsc" />
+@*<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">*@
+<script>
+    $('.datepicker').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+    var currentPage = 1;
+    $('#ddlPager').change(function () {
+        currentPage = 1;
+        $('.dynamicPager').hide();
+        searchData(1, null);
+    });
+
+
+    $(window).scroll(function () {
+        if ($('#ddlPager').val() == 101)
+            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                currentPage += 1;
+                searchData(currentPage, null);
+            }
+    });
+
+    function AjaxCall(page, Data, orderBy, orderByAsc) {
+        $.blockUI({ message: '<p><img src="/images/loading.gif" /> Loading...</p>' });
+        var pageSize = $('#ddlPager').val();
+        pageSize = pageSize == 101 ? 40 : pageSize;
+
+        $.ajax({
+            url: '@Url.Action(Model.AssociatedMethod)',
+            data: { "page": page, "PageSize": pageSize, "Search": Data, "orderBy": orderBy, "orderByAsc": orderByAsc, "IsPostBack": true },
+            success: function (data) {
+                if ($('#ddlPager').val() == 101) {
+                    if (page == 1) {
+                        $("#data-list").html(data);
+                        $.unblockUI();
+                    }
+                    else {
+                        $("#data-list").append(data);
+                        $.unblockUI();
+                    }
+                }
+                else {
+                    $("#data-list").html(data);
+                    $.unblockUI();
+                }
+            }
+        });
+    }
+
+    $('.asc-desc').click(function () {
+        var currentAnchor = $(this);
+        $('.sorting').each(function () { $(this).removeClass("asc").removeClass("desc").addClass("asc-desc"); });
+        $('#hdnOrderByAsc').val() == 1 ? (currentAnchor.hasClass("asc-desc") ? currentAnchor.removeClass("asc-desc").addClass("asc") : (currentAnchor.hasClass("desc") ? currentAnchor.removeClass("desc").addClass("asc") : "")) : (currentAnchor.hasClass("asc-desc") ? currentAnchor.removeClass("asc-desc").addClass("desc") : (currentAnchor.hasClass("asc") ? currentAnchor.removeClass("asc").addClass("desc") : ""));
+    });
+
+    function searchData(page, orderBy) {
+        if (orderBy == null) {
+            if ($('#hdnOrderByCurrent').val().length > 0) {
+                orderBy = $('#hdnOrderByCurrent').val();
+            }
+        }
+        else {
+            $('#hdnOrderByAsc').val() == 1 ? $('#hdnOrderByAsc').val(0) : $('#hdnOrderByAsc').val(1);
+            $('#hdnOrderByCurrent').val(orderBy);
+        }
+        var obj = {};
+        var columnNames = $("#hdnColumns").val().split(',');
+        for (var i = 0; i < columnNames.length; i++) {
+            if (i > 0) {
+                var column = columnNames[i];
+                var columnReplaced = column.split('.').join('\\.');
+                var valueData = $("#" + columnReplaced).val();
+                obj[column] = valueData;
+            }
+        }
+        AjaxCall(page, JSON.stringify(obj), orderBy, $('#hdnOrderByAsc').val());
+    }
+
+    function RenderPage() {
+        var PageNumber = $('#txtPageNumber').val();
+        if (parseInt(PageNumber) > 0 && parseInt(PageNumber) && parseInt(PageNumber) <= parseInt('@Model.NumberOfPages')) {
+            searchData(PageNumber);
+        }
+        else {
+            searchData(1);
+        }
+    }
+
+</script>

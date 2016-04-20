@@ -1,0 +1,6 @@
+// Add below code to your actual view to get the datatable
+
+@model dynamic
+<div class="right_col" role="main">
+    @{ Html.RenderPartial("DataTableView", (object)Model); }
+</div>

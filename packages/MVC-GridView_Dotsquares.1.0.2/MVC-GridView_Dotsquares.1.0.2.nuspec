@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>MVC-GridView_Dotsquares</id>
+    <version>1.0.2</version>
+    <title>MVC-GridView</title>
+    <authors>Pankaj Kumar</authors>
+    <owners>Pankaj Kumar</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A common grid view for MVC application including sorting, filtering and paging functionality.</description>
+    <copyright>@2016</copyright>
+    <dependencies>
+      <group targetFramework="Unsupported0.0">
+        <dependency id="jQuery" version="2.2.2" />
+        <dependency id="LinqKit" version="1.1.3.1" />
+      </group>
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Web.Entity" targetFramework="" />
+    </frameworkAssemblies>
+  </metadata>
+</package>

@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CCH_Entities.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="CCH_EntitiesStoreContainer">
+    <EntitySet Name="Compliants" EntityType="CCH_Entities.Store.Compliants" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Representations" EntityType="CCH_Entities.Store.Representations" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Complainants" EntityType="CCH_Entities.Store.Complainants" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Advisors" EntityType="CCH_Entities.Store.Advisors" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BodyCorporates" EntityType="CCH_Entities.Store.BodyCorporates" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Countries" EntityType="CCH_Entities.Store.Countries" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="CompliantBodyCorporate" Association="CCH_Entities.Store.CompliantBodyCorporate">
+      <End Role="Compliant" EntitySet="Compliants" />
+      <End Role="BodyCorporate" EntitySet="BodyCorporates" />
+    </AssociationSet>
+    <AssociationSet Name="CompliantComplainant" Association="CCH_Entities.Store.CompliantComplainant">
+      <End Role="Compliant" EntitySet="Compliants" />
+      <End Role="Complainant" EntitySet="Complainants" />
+    </AssociationSet>
+    <AssociationSet Name="ComplainantRepresentation" Association="CCH_Entities.Store.ComplainantRepresentation">
+      <End Role="Complainant" EntitySet="Complainants" />
+      <End Role="Representation" EntitySet="Representations" />
+    </AssociationSet>
+    <AssociationSet Name="RepresentationAdvisor" Association="CCH_Entities.Store.RepresentationAdvisor">
+      <End Role="Representation" EntitySet="Representations" />
+      <End Role="Advisor" EntitySet="Advisors" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Compliants">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SubjectMatter" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Details" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="MatterEscalation" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Purpose" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="PurposedOutcome" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="YearExplanation" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ConsentToInvestigation" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DateOfSubmission" Type="datetime" Nullable="false" />
+    <Property Name="Complainant_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Representations">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Proof_of_Rep" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Complainant_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Complainants">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="LastName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Nationality" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="PO_Box" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Tel_Number" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="FaxNumber" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="EmailAddress" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Advisors">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="LastName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Address" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="WorkTel" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Cell" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="EmailAddress" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Representation_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BodyCorporates">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CountryofOrigin" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Registration_Number" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Body_Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Compliant_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Countries">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CountryName" Type="nvarchar" Nullable="false" MaxLength="100" />
+  </EntityType>
+  <Association Name="CompliantBodyCorporate">
+    <End Role="Compliant" Type="CCH_Entities.Store.Compliants" Multiplicity="1" />
+    <End Role="BodyCorporate" Type="CCH_Entities.Store.BodyCorporates" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Compliant">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BodyCorporate">
+        <PropertyRef Name="Compliant_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CompliantComplainant">
+    <End Role="Compliant" Type="CCH_Entities.Store.Compliants" Multiplicity="*" />
+    <End Role="Complainant" Type="CCH_Entities.Store.Complainants" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Complainant">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Compliant">
+        <PropertyRef Name="Complainant_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ComplainantRepresentation">
+    <End Role="Complainant" Type="CCH_Entities.Store.Complainants" Multiplicity="1" />
+    <End Role="Representation" Type="CCH_Entities.Store.Representations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Complainant">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Representation">
+        <PropertyRef Name="Complainant_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="RepresentationAdvisor">
+    <End Role="Representation" Type="CCH_Entities.Store.Representations" Multiplicity="1" />
+    <End Role="Advisor" Type="CCH_Entities.Store.Advisors" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Representation">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Advisor">
+        <PropertyRef Name="Representation_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

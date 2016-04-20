@@ -1,0 +1,81 @@
+﻿@model IEnumerable<CCHS_March_.Models.Data_Models.Compliant>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SubjectMatter)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Details)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MatterEscalation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Purpose)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PurposedOutcome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.YearExplanation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ConsentToInvestigation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateOfSubmission)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BodyCorporate.CountryofOrigin)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SubjectMatter)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Details)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MatterEscalation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Purpose)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PurposedOutcome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.YearExplanation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ConsentToInvestigation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateOfSubmission)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BodyCorporate.CountryofOrigin)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

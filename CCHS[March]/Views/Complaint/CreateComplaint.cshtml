@@ -12,7 +12,8 @@
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
-
+        @Html.HiddenFor(model => model.complainant.Id, new { @id="accID"})
+                
         @*<div class="form-group">
                 @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -78,9 +79,19 @@
                                 <center><h4>Personal Details</h4></center>
                             </div>
                             <div class="panel-body">
-                                @Html.TextBoxFor(model => model.complainant.FirstName, new { @class = "form-control", placeholder = "First Name" })
+
+                                <div class="input-group">
+                                    @Html.TextBoxFor(model => model.accFlag, new { @class = "form-control", placeholder = "Account Number", id = "accNumber" })
+                                    @*<input class="form-control" type="text" placeholder="Account Number" id="accNumber">*@
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" onclick="searchAccount()">Search</button>
+                                    </span>
+                                </div>
                                 <br />
-                                @Html.TextBoxFor(model => model.complainant.LastName, new { @class = "form-control", placeholder = "Last Name" })
+
+                                @Html.TextBoxFor(model => model.complainant.FirstName, new { @class = "form-control", placeholder = "First Name", id = "firstname" })
+                                <br />
+                                @Html.TextBoxFor(model => model.complainant.LastName, new { @class = "form-control", placeholder = "Last Name", id = "lastname" })
                                 <br />
                                 <select class="form-control" name="complainant.Nationality" id="complainant.Nationality">
                                     <option value="">-- Select Nationality --</option>
@@ -282,19 +293,19 @@
                                     Incase of Body Corporate Refer to <b>Section B</b>
                                 </span>
 
-                                @Html.TextBoxFor(model => model.complainant.Tel_Number, new { @class = "form-control", placeholder = "Telephone Number" })
+                                @Html.TextBoxFor(model => model.complainant.Tel_Number, new { @class = "form-control", placeholder = "Telephone Number", id = "tel" })
 
                                 <br />
 
-                                @Html.TextBoxFor(model => model.complainant.FaxNumber, new { @class = "form-control", placeholder = "Fax Number" })
+                                @Html.TextBoxFor(model => model.complainant.FaxNumber, new { @class = "form-control", placeholder = "Fax Number", id = "fax" })
 
                                 <br />
 
-                                @Html.TextBoxFor(model => model.complainant.EmailAddress, new { @class = "form-control", placeholder = "Email Address" })
+                                @Html.TextBoxFor(model => model.complainant.EmailAddress, new { @class = "form-control", placeholder = "Email Address", id = "email" })
 
                                 <br />
 
-                                @Html.TextAreaFor(model => model.complainant.PO_Box, new { @class = "form-control", placeholder = "P.O. Box" })
+                                @Html.TextAreaFor(model => model.complainant.PO_Box, new { @class = "form-control", placeholder = "P.O. Box", id = "pobox" })
                             </div>
                         </div>
                     </div>
@@ -609,6 +620,29 @@
                         </div>
                     </div>
 
+                    <div id="myModal" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <center>
+                                        <h4 class="modal-title">Account Not Found</h4>
+                                    </center>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <img src="~/Images/gremlins.gif" class="col-md-8 col-md-offset-2" />
+                                    </div>
+                                    <center><p>The Account Number you entered was incorrect, the gremlins might have grabbed your account?</p></center>
+                                    <p class="text-warning"><small>If you dont have an account please enter the fields manually.</small></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-8 col-md-offset-2">
                             <button type="submit" class="btn btn-block btn-success">Submit Complaint</button>
@@ -617,62 +651,6 @@
                 </div>
             </div>
         </div>
-
-
-
-        @*<div class="form-group">
-                @Html.LabelFor(model => model.LastName, new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.LastName, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.LastName)
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Nationality, new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.Nationality, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Nationality)
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.PO_Box, new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.PO_Box, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.PO_Box)
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Tel_Number, new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.Tel_Number, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Tel_Number)
-                </div>
-            </div>
-
-            <div class="form-group">
-                <span>@Html.LabelFor(model => model.FaxNumber, new { @class = "control-label col-md-2" })</span>
-                <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.FaxNumber, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.FaxNumber)
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.EmailAddress, new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.EmailAddress)
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
-            </div>*@
     }
 </div>
 
@@ -682,4 +660,41 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/Custom/ComplaintCreate.js"></script>
+
+    <script type="text/javascript">
+    function searchAccount()
+    {
+            var id = $('#accNumber').val();
+            //$.getJSON(url, { accountNumber: id }, function (data) {
+            
+            //}); 
+
+            $.ajax({
+                url: "/Complaint/GetComplainantInfo",
+                data: JSON.stringify({ accountNumber: id }),
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                error: function (response) {
+                    $('#myModal').modal('toggle');
+                },
+                success: function (data) {
+                    //alert(response);
+                    if (data != null) {                        
+                        $("#accID").val(data.Id);
+                        $("#firstname").val(data.FirstName);
+                        $("#lastname").val(data.LastName);
+                        $("#complainant.Nationality").val(data.Nationality);
+                        $("#tel").val(data.Tel_Number);
+                        $("#fax").val(data.FaxNumber);
+                        $("#email").val(data.EmailAddress);
+                        $("#pobox").val(data.PO_Box);
+                    } else {
+                        $('#myModal').modal('toggle');
+                    }
+                }
+            });
+        }
+    </script>
 }

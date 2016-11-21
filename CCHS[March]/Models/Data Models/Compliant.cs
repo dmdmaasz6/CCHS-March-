@@ -23,8 +23,11 @@ namespace CCHS_March_.Models.Data_Models
         public string YearExplanation { get; set; }
         public string ConsentToInvestigation { get; set; }
         public System.DateTime DateOfSubmission { get; set; }
+        public string Heading { get; set; }
+        public string Status { get; set; }
     
         public virtual BodyCorporate BodyCorporate { get; set; }
         public virtual Complainant Complainant { get; set; }
+        public virtual Representation Representation { get; set; }
     }
 }

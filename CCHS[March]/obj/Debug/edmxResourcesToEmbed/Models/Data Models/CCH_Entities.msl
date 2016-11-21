@@ -13,6 +13,8 @@
           <ScalarProperty Name="YearExplanation" ColumnName="YearExplanation" />
           <ScalarProperty Name="ConsentToInvestigation" ColumnName="ConsentToInvestigation" />
           <ScalarProperty Name="DateOfSubmission" ColumnName="DateOfSubmission" />
+          <ScalarProperty Name="Heading" ColumnName="Heading" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -28,6 +30,7 @@
       <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Complainant)">
         <MappingFragment StoreEntitySet="Complainants">
           <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
           <ScalarProperty Name="FirstName" ColumnName="FirstName" />
           <ScalarProperty Name="LastName" ColumnName="LastName" />
           <ScalarProperty Name="Nationality" ColumnName="Nationality" />
@@ -85,19 +88,19 @@
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="ComplainantRepresentation" TypeName="CCH_Entities.ComplainantRepresentation" StoreEntitySet="Representations">
-      <EndProperty Name="Complainant">
-        <ScalarProperty Name="Id" ColumnName="Complainant_Id" />
-      </EndProperty>
-      <EndProperty Name="Representation">
-        <ScalarProperty Name="Id" ColumnName="Id" />
-      </EndProperty>
-    </AssociationSetMapping>
     <AssociationSetMapping Name="RepresentationAdvisor" TypeName="CCH_Entities.RepresentationAdvisor" StoreEntitySet="Advisors">
       <EndProperty Name="Representation">
         <ScalarProperty Name="Id" ColumnName="Representation_Id" />
       </EndProperty>
       <EndProperty Name="Advisor">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="RepresentationCompliant" TypeName="CCH_Entities.RepresentationCompliant" StoreEntitySet="Representations">
+      <EndProperty Name="Compliant">
+        <ScalarProperty Name="Id" ColumnName="Compliant_Id" />
+      </EndProperty>
+      <EndProperty Name="Representation">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

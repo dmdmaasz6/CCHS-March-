@@ -1,81 +1,28 @@
-﻿@model IEnumerable<CCHS_March_.Models.Data_Models.Compliant>
+﻿@model IEnumerable<CCHS_March_.Models.View_Models.ComplaintIndexViewModel>
+@using GridMvc.Html
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<center><h2>Logged Complaints</h2></center>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.SubjectMatter)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Details)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MatterEscalation)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Purpose)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PurposedOutcome)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.YearExplanation)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ConsentToInvestigation)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DateOfSubmission)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.BodyCorporate.CountryofOrigin)
-        </th>
-        <th></th>
-    </tr>
+@Html.Grid(Model).Columns(columns =>
+           {
+               columns.Add(index => index.thisComplainant.FirstName).Titled("Firstname");
+               columns.Add(index => index.thisComplainant.LastName).Titled("Lastname").Sortable(true);
+               columns.Add(index => index.thisComplainant.Tel_Number).Titled("Telephone").Sortable(true).Filterable(true);
+               //columns.Add(index => index.thisComlaint.Heading).Titled("Topic").Sortable(true);
+               //columns.Add(index => index.thisComlaint.Status).Titled("Status").Sortable(true).Filterable(true);
+               columns.Add(index => index.thisComlaint.DateOfSubmission).Titled("Date of Submission").Sortable(true).Filterable(true);
+               columns.Add().Encoded(false).Sanitized(false).SetWidth(30).RenderValueAs(o => Html.ActionLink("Details", "Details", new { id = o.thisComlaint.Id }, new { @class = "form -control btn btn-info", }));
+           }).WithPaging(20)
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.SubjectMatter)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Details)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MatterEscalation)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Purpose)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PurposedOutcome)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.YearExplanation)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ConsentToInvestigation)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateOfSubmission)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.BodyCorporate.CountryofOrigin)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+
+
+
+@section scripts{
+    <script src="@Url.Content("~/Scripts/jquery.min.js")" type="text/javascript"> </script>
+    <link href="@Url.Content("~/Content/Gridmvc.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/gridmvc.min.js")" type="text/javascript"> </script>
 }
-
-</table>

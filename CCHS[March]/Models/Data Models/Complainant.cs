@@ -15,6 +15,7 @@ namespace CCHS_March_.Models.Data_Models
     public partial class Complainant
     {
         public int Id { get; set; }
+        public string AccountNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Nationality { get; set; }
@@ -24,6 +25,5 @@ namespace CCHS_March_.Models.Data_Models
         public string EmailAddress { get; set; }
     
         public virtual Compliant Compliant { get; set; }
-        public virtual Representation Representation { get; set; }
     }
 }

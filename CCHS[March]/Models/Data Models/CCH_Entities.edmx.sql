@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 04/10/2016 13:24:02
--- Generated from EDMX file: C:\Users\Admin\documents\visual studio 2013\Projects\CCHS[March]]\CCHS[March]]\Models\Data Models\CCH_Entities.edmx
+-- Date Created: 05/26/2016 23:40:03
+-- Generated from EDMX file: C:\Users\Admin\Documents\GitHub\CCHS[March]]\CCHS[March]]\Models\Data Models\CCH_Entities.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -23,11 +23,11 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_CompliantComplainant]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Compliants] DROP CONSTRAINT [FK_CompliantComplainant];
 GO
-IF OBJECT_ID(N'[dbo].[FK_ComplainantRepresentation]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Representations] DROP CONSTRAINT [FK_ComplainantRepresentation];
-GO
 IF OBJECT_ID(N'[dbo].[FK_RepresentationAdvisor]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Advisors] DROP CONSTRAINT [FK_RepresentationAdvisor];
+GO
+IF OBJECT_ID(N'[dbo].[FK_RepresentationCompliant]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Representations] DROP CONSTRAINT [FK_RepresentationCompliant];
 GO
 
 -- --------------------------------------------------
@@ -68,6 +68,8 @@ CREATE TABLE [dbo].[Compliants] (
     [YearExplanation] nvarchar(max)  NOT NULL,
     [ConsentToInvestigation] nvarchar(max)  NOT NULL,
     [DateOfSubmission] datetime  NOT NULL,
+    [Heading] nvarchar(max)  NOT NULL,
+    [Status] nvarchar(max)  NOT NULL,
     [Complainant_Id] int  NOT NULL
 );
 GO
@@ -76,13 +78,14 @@ GO
 CREATE TABLE [dbo].[Representations] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Proof_of_Rep] nvarchar(max)  NOT NULL,
-    [Complainant_Id] int  NOT NULL
+    [Compliant_Id] int  NOT NULL
 );
 GO
 
 -- Creating table 'Complainants'
 CREATE TABLE [dbo].[Complainants] (
     [Id] int IDENTITY(1,1) NOT NULL,
+    [AccountNumber] nvarchar(max)  NOT NULL,
     [FirstName] nvarchar(max)  NOT NULL,
     [LastName] nvarchar(max)  NOT NULL,
     [Nationality] nvarchar(max)  NOT NULL,
@@ -195,20 +198,6 @@ ON [dbo].[Compliants]
     ([Complainant_Id]);
 GO
 
--- Creating foreign key on [Complainant_Id] in table 'Representations'
-ALTER TABLE [dbo].[Representations]
-ADD CONSTRAINT [FK_ComplainantRepresentation]
-    FOREIGN KEY ([Complainant_Id])
-    REFERENCES [dbo].[Complainants]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Creating non-clustered index for FOREIGN KEY 'FK_ComplainantRepresentation'
-CREATE INDEX [IX_FK_ComplainantRepresentation]
-ON [dbo].[Representations]
-    ([Complainant_Id]);
-GO
-
 -- Creating foreign key on [Representation_Id] in table 'Advisors'
 ALTER TABLE [dbo].[Advisors]
 ADD CONSTRAINT [FK_RepresentationAdvisor]
@@ -221,6 +210,20 @@ ADD CONSTRAINT [FK_RepresentationAdvisor]
 CREATE INDEX [IX_FK_RepresentationAdvisor]
 ON [dbo].[Advisors]
     ([Representation_Id]);
+GO
+
+-- Creating foreign key on [Compliant_Id] in table 'Representations'
+ALTER TABLE [dbo].[Representations]
+ADD CONSTRAINT [FK_RepresentationCompliant]
+    FOREIGN KEY ([Compliant_Id])
+    REFERENCES [dbo].[Compliants]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_RepresentationCompliant'
+CREATE INDEX [IX_FK_RepresentationCompliant]
+ON [dbo].[Representations]
+    ([Compliant_Id]);
 GO
 
 -- --------------------------------------------------

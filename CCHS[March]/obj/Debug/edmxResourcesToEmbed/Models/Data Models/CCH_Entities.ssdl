@@ -15,13 +15,13 @@
       <End Role="Compliant" EntitySet="Compliants" />
       <End Role="Complainant" EntitySet="Complainants" />
     </AssociationSet>
-    <AssociationSet Name="ComplainantRepresentation" Association="CCH_Entities.Store.ComplainantRepresentation">
-      <End Role="Complainant" EntitySet="Complainants" />
-      <End Role="Representation" EntitySet="Representations" />
-    </AssociationSet>
     <AssociationSet Name="RepresentationAdvisor" Association="CCH_Entities.Store.RepresentationAdvisor">
       <End Role="Representation" EntitySet="Representations" />
       <End Role="Advisor" EntitySet="Advisors" />
+    </AssociationSet>
+    <AssociationSet Name="RepresentationCompliant" Association="CCH_Entities.Store.RepresentationCompliant">
+      <End Role="Representation" EntitySet="Representations" />
+      <End Role="Compliant" EntitySet="Compliants" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Compliants">
@@ -37,6 +37,8 @@
     <Property Name="YearExplanation" Type="nvarchar(max)" Nullable="false" />
     <Property Name="ConsentToInvestigation" Type="nvarchar(max)" Nullable="false" />
     <Property Name="DateOfSubmission" Type="datetime" Nullable="false" />
+    <Property Name="Heading" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Status" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Complainant_Id" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Representations">
@@ -45,13 +47,14 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Proof_of_Rep" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="Complainant_Id" Type="int" Nullable="false" />
+    <Property Name="Compliant_Id" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Complainants">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountNumber" Type="nvarchar(max)" Nullable="false" />
     <Property Name="FirstName" Type="nvarchar(max)" Nullable="false" />
     <Property Name="LastName" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Nationality" Type="nvarchar(max)" Nullable="false" />
@@ -114,18 +117,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="ComplainantRepresentation">
-    <End Role="Complainant" Type="CCH_Entities.Store.Complainants" Multiplicity="1" />
-    <End Role="Representation" Type="CCH_Entities.Store.Representations" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Complainant">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Representation">
-        <PropertyRef Name="Complainant_Id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="RepresentationAdvisor">
     <End Role="Representation" Type="CCH_Entities.Store.Representations" Multiplicity="1" />
     <End Role="Advisor" Type="CCH_Entities.Store.Advisors" Multiplicity="*" />
@@ -135,6 +126,18 @@
       </Principal>
       <Dependent Role="Advisor">
         <PropertyRef Name="Representation_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="RepresentationCompliant">
+    <End Role="Representation" Type="CCH_Entities.Store.Representations" Multiplicity="*" />
+    <End Role="Compliant" Type="CCH_Entities.Store.Compliants" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Compliant">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Representation">
+        <PropertyRef Name="Compliant_Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

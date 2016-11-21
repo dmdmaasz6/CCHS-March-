@@ -50,6 +50,33 @@ namespace CCHS_March_.Models
         public string UserName { get; set; }
 
         [Required]
+        [Display(Name = "Firstname")]
+        public string Firstname { get; set; }
+
+        [Required]
+        [Display(Name = "Lastname")]
+        public string Lastname { get; set; }
+
+        [Required]
+        [Display(Name = "Email")]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "Department")]
+        public string Department { get; set; }
+
+        [Required]
+        [Display(Name = "Position")]
+        public string Position { get; set; }
+
+        [Required]
+        [Display(Name = "AccountType")]
+        public string AccountType { get; set; }
+
+
+
+        [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]

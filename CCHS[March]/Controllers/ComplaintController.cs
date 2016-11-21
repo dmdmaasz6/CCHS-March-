@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
 using CCHS_March_.Models;
+using System.IO;
 
 namespace CCHS_March_.Models
 {
@@ -36,11 +37,17 @@ namespace CCHS_March_.Models
                 foreach (var item in complainants)
                 {
                     ComplaintIndexViewModel thisViewModel = new ComplaintIndexViewModel();
+                    List<Compliant> listComplaints  = new List<Compliant>();
                     thisViewModel.thisComplainant = item;
-                    thisViewModel.thisComlaint = con.Query<Compliant>("SELECT * FROM Compliants WHERE Id = @com_id", new { com_id = item.Id}).SingleOrDefault();
 
-                    viewList.Add(thisViewModel);
+                    //thisViewModel.thisComlaint
+                    listComplaints = con.Query<Compliant>("SELECT * FROM Compliants WHERE Complainant_Id = @com_id", new { com_id = item.Id}).ToList();
 
+                    foreach (var item1 in listComplaints)
+	                {
+                        thisViewModel.thisComlaint = item1;
+                        viewList.Add(thisViewModel);   
+	                }
                 }
 
                 con.Close();
@@ -52,8 +59,6 @@ namespace CCHS_March_.Models
 
                 throw;
             }
-
-            return View();
         }
 
 
@@ -62,7 +67,45 @@ namespace CCHS_March_.Models
         // GET: /Complaint/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            try
+            {
+                con.Open();
+
+                ComplaintViewModel viewModel = new ComplaintViewModel();
+                viewModel.complaint = con.Query<Compliant>("SELECT * FROM Compliants WHERE ID = @ComID", new { ComID = id }).FirstOrDefault();
+                int comID = con.Query<int>("SELECT Complainant_Id FROM Compliants WHERE ID = @ComID", new { ComID = id }).FirstOrDefault();
+                viewModel.complainant = con.Query<Complainant>("SELECT * FROM Complainants WHERE ID = @ComID", new { ComID = comID }).FirstOrDefault();
+                viewModel.body_corporate = con.Query<BodyCorporate>("SELECT * FROM BodyCorporates WHERE Compliant_Id = @compl_Id", new { compl_Id = id }).FirstOrDefault();
+                
+                Representation rep = new Representation();                
+                rep = con.Query<Representation>("SELECT * FROM Representations WHERE ID = @ComID", new { ComID = comID }).FirstOrDefault();
+
+                //viewModel.rep_doc = File(rep.Proof_of_Rep + "RepDoc_" + id, System.Net.Mime.MediaTypeNames.Application.Octet);
+                
+                ViewBag.repId = rep.Id;
+
+                viewModel.advisor = con.Query<Advisor>("SELECT * FROM Advisors WHERE Representation_Id = @rep_id", new { rep_id = rep.Id }).FirstOrDefault();
+
+                con.Close();
+
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public FilePathResult GetFile(int id)
+        {
+            Representation rep = new Representation();
+            using (con)
+            {
+                con.Open();
+                rep = con.Query<Representation>("SELECT * FROM Representations WHERE ID = @ComID", new { ComID = id }).FirstOrDefault();
+                con.Close();
+            }
+            return File(rep.Proof_of_Rep, System.Net.Mime.MediaTypeNames.Application.Pdf); ;
         }
 
         //
@@ -129,29 +172,40 @@ namespace CCHS_March_.Models
                 // TODO: This is the data saving logic
                 
                 //Save Complainant to Databse
-                try
+                if (model.accFlag == null)
                 {
+                    try
+                    {
 
-                    DynamicParameters param = new DynamicParameters();
-                    param.Add("@firstname", model.complainant.FirstName);
-                    param.Add("@lastname", model.complainant.LastName);
-                    param.Add("@nationality", model.complainant.Nationality);
-                    param.Add("@po_box", model.complainant.PO_Box);
-                    param.Add("@tel_number", model.complainant.Tel_Number);
-                    param.Add("@fax_number", model.complainant.FaxNumber);
-                    param.Add("@email", model.complainant.EmailAddress);
-                    param.Add("@id", dbType: DbType.Int32, direction: ParameterDirection.Output);
-                    con.Open();
-                    con.Execute("complainant_insert", param, commandType: CommandType.StoredProcedure);
-                    con.Close();
+                        DynamicParameters param = new DynamicParameters();
+                        param.Add("@firstname", model.complainant.FirstName);
+                        param.Add("@lastname", model.complainant.LastName);
+                        param.Add("@nationality", model.complainant.Nationality);
+                        param.Add("@po_box", model.complainant.PO_Box);
+                        param.Add("@tel_number", model.complainant.Tel_Number);
+                        param.Add("@fax_number", model.complainant.FaxNumber);
+                        param.Add("@email", model.complainant.EmailAddress);
 
-                    complainant_id = param.Get<int>("@id");
+                        int accStart = con.Query<int>("SELECT IDENT_CURRENT( 'Complainants' ) AS AccNum").FirstOrDefault();
+                        param.Add("@accNum", "ECB-ACC" + (accStart + 1));
 
+                        param.Add("@id", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                        con.Execute("complainant_insert", param, commandType: CommandType.StoredProcedure);
+                        con.Close();
+
+                        complainant_id = param.Get<int>("@id");
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //Log error as per your need 
+                        throw ex;
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    //Log error as per your need 
-                    throw ex;
+                    complainant_id = model.complainant.Id;
                 }
 
                 //Save Complaint to Database
@@ -166,6 +220,8 @@ namespace CCHS_March_.Models
                     param.Add("@yearExpla", model.complaint.YearExplanation);
                     param.Add("@consent", model.complaint.ConsentToInvestigation);
                     param.Add("@complainant_id", complainant_id);
+                    param.Add("@heading", model.complaint.SubjectMatter.Substring(0,10));
+                    param.Add("@status", "Submitted for Review");
                     param.Add("@date", System.DateTime.Now);
                     param.Add("@id", dbType: DbType.Int32, direction: ParameterDirection.Output);
                     con.Open();
@@ -211,11 +267,11 @@ namespace CCHS_March_.Models
 
                     DynamicParameters param = new DynamicParameters();
 
-                    string path = Server.MapPath("~") + "\\Rep_Data\\" + model.rep_doc.FileName;
+                    string path = Server.MapPath("~") + "Rep_Data\\" + model.rep_doc.FileName;
                     model.rep_doc.SaveAs(path);
 
                     param.Add("@proof_of_rep", path);
-                    param.Add("@comp_id", complainant_id);
+                    param.Add("@comp_id", complaint_id);
                     param.Add("@id", dbType: DbType.Int32, direction: ParameterDirection.Output);
                     con.Open();
                     con.Execute("representation_insert", param, commandType: CommandType.StoredProcedure);
@@ -235,12 +291,12 @@ namespace CCHS_March_.Models
                 {
 
                     DynamicParameters param = new DynamicParameters();
-                    param.Add("@firstname", model.complainant.FirstName);
-                    param.Add("@lastname", model.complainant.LastName);
-                    param.Add("@address", model.complainant.Nationality);
-                    param.Add("@work_tel", model.complainant.PO_Box);
-                    param.Add("@cell", model.complainant.Tel_Number);
-                    param.Add("@email", model.complainant.FaxNumber);
+                    param.Add("@firstname", model.advisor.FirstName);
+                    param.Add("@lastname", model.advisor.LastName);
+                    param.Add("@address", model.advisor.Address);
+                    param.Add("@work_tel", model.advisor.WorkTel);
+                    param.Add("@cell", model.advisor.Cell);
+                    param.Add("@email", model.advisor.EmailAddress);
                     param.Add("@rep_id", rep_id);
                     param.Add("@id", dbType: DbType.Int32, direction: ParameterDirection.Output);
                     con.Open();
@@ -263,6 +319,33 @@ namespace CCHS_March_.Models
             {
                 return View();
             }
+        }
+
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
+        public JsonResult GetComplainantInfo(string accountNumber)
+        {
+            try
+            {
+                con.Open();
+                
+                Complainant compInfo = new Complainant();
+                compInfo = con.Query<Complainant>("SELECT * FROM Complainants WHERE AccountNumber = @accNum", new { accNum = accountNumber }).FirstOrDefault();
+                //{
+                //    FirstName = "Bob",
+                //    LastName = "Cravens",
+                //    Nationality = "Namibian",
+                //    Tel_Number = "061258741",
+                //    FaxNumber = "0612583001",
+                //    EmailAddress = "maaszdonovan@gmail.com",
+                //    PO_Box = "P.O. Box 277 Maltahohe Namibia"
+                //};
+                return Json(compInfo);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
         }
     }
 }

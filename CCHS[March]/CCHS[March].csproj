@@ -42,6 +42,9 @@
     <Reference Include="Dapper">
       <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="GridMvc">
+      <HintPath>..\packages\Grid.Mvc.3.0.0\lib\net40\GridMvc.dll</HintPath>
+    </Reference>
     <Reference Include="LinqKit">
       <HintPath>..\packages\MVC-GridView_Dotsquares.1.0.2\lib\LinqKit.dll</HintPath>
     </Reference>
@@ -167,6 +170,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ComplainantController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -426,6 +430,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\FormStyles.css" />
+    <Content Include="Content\Gridmvc.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -433,8 +438,10 @@
     <Content Include="Images\asc-dsc.png" />
     <Content Include="Images\asc-dsc1.png" />
     <Content Include="Images\bg.gif" />
+    <Content Include="Images\gremlins.gif" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\notebook.png" />
+    <Content Include="Images\PowerSaver.png" />
     <Content Include="Models\Data Models\CCH_Entities.edmx.sql" />
     <Content Include="Read Me.txt" />
     <Content Include="Scripts\bootstrap.js" />
@@ -497,7 +504,13 @@
     <Content Include="Content\bootstrap-datepicker-master\.npmignore" />
     <Content Include="Content\bootstrap-datepicker-master\.gitignore" />
     <Content Include="Content\bootstrap-datepicker-master\.editorconfig" />
+    <Content Include="Grid.mvc.readme" />
+    <None Include="Properties\PublishProfiles\CCHS_Offline.pubxml" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
+    <Content Include="Scripts\Custom\ComplaintCreate.js" />
+    <Content Include="Scripts\gridmvc.js" />
+    <Content Include="Scripts\gridmvc.lang.ru.js" />
+    <Content Include="Scripts\gridmvc.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -539,10 +552,15 @@
     <Content Include="Views\Shared\HeaderDatatable.cshtml" />
     <Content Include="Views\Shared\DataTableView.cshtml" />
     <Content Include="Views\Shared\DataTable.cshtml" />
+    <Content Include="Views\Shared\_GridPager.cshtml" />
+    <Content Include="Views\Shared\_Grid.cshtml" />
+    <Content Include="Views\Complaint\Details.cshtml" />
+    <Content Include="Views\Account\AccountIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Rep_Data\" />
+    <Folder Include="Views\Complainant\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

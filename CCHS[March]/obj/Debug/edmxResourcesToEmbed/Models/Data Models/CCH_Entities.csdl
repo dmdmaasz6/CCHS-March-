@@ -14,15 +14,15 @@
       <End Role="Compliant" EntitySet="Compliants" />
       <End Role="Complainant" EntitySet="Complainants" />
     </AssociationSet>
-    <AssociationSet Name="ComplainantRepresentation" Association="CCH_Entities.ComplainantRepresentation">
-      <End Role="Complainant" EntitySet="Complainants" />
-      <End Role="Representation" EntitySet="Representations" />
-    </AssociationSet>
     <AssociationSet Name="RepresentationAdvisor" Association="CCH_Entities.RepresentationAdvisor">
       <End Role="Representation" EntitySet="Representations" />
       <End Role="Advisor" EntitySet="Advisors" />
     </AssociationSet>
     <EntitySet Name="Countries" EntityType="CCH_Entities.Country" />
+    <AssociationSet Name="RepresentationCompliant" Association="CCH_Entities.RepresentationCompliant">
+      <End Role="Representation" EntitySet="Representations" />
+      <End Role="Compliant" EntitySet="Compliants" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Compliant">
     <Key>
@@ -39,6 +39,9 @@
     <Property Name="DateOfSubmission" Type="DateTime" Nullable="false" Precision="3" />
     <NavigationProperty Name="BodyCorporate" Relationship="CCH_Entities.CompliantBodyCorporate" FromRole="Compliant" ToRole="BodyCorporate" />
     <NavigationProperty Name="Complainant" Relationship="CCH_Entities.CompliantComplainant" FromRole="Compliant" ToRole="Complainant" />
+    <NavigationProperty Name="Representation" Relationship="CCH_Entities.RepresentationCompliant" FromRole="Compliant" ToRole="Representation" />
+    <Property Name="Heading" Type="String" Nullable="false" />
+    <Property Name="Status" Type="String" Nullable="false" />
   </EntityType>
   <EntityType Name="Representation">
     <Key>
@@ -46,14 +49,15 @@
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Proof_of_Rep" Type="String" Nullable="false" />
-    <NavigationProperty Name="Complainant" Relationship="CCH_Entities.ComplainantRepresentation" FromRole="Representation" ToRole="Complainant" />
     <NavigationProperty Name="Advisor" Relationship="CCH_Entities.RepresentationAdvisor" FromRole="Representation" ToRole="Advisor" />
+    <NavigationProperty Name="Compliant" Relationship="CCH_Entities.RepresentationCompliant" FromRole="Representation" ToRole="Compliant" />
   </EntityType>
   <EntityType Name="Complainant">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountNumber" Type="String" Nullable="false" />
     <Property Name="FirstName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="LastName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="Nationality" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -62,7 +66,6 @@
     <Property Name="FaxNumber" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <NavigationProperty Name="Compliant" Relationship="CCH_Entities.CompliantComplainant" FromRole="Complainant" ToRole="Compliant" />
-    <NavigationProperty Name="Representation" Relationship="CCH_Entities.ComplainantRepresentation" FromRole="Complainant" ToRole="Representation" />
   </EntityType>
   <EntityType Name="Advisor">
     <Key>
@@ -95,10 +98,6 @@
     <End Type="CCH_Entities.Compliant" Role="Compliant" Multiplicity="1" />
     <End Type="CCH_Entities.Complainant" Role="Complainant" Multiplicity="1" />
   </Association>
-  <Association Name="ComplainantRepresentation">
-    <End Type="CCH_Entities.Complainant" Role="Complainant" Multiplicity="1" />
-    <End Type="CCH_Entities.Representation" Role="Representation" Multiplicity="0..1" />
-  </Association>
   <Association Name="RepresentationAdvisor">
     <End Type="CCH_Entities.Representation" Role="Representation" Multiplicity="1" />
     <End Type="CCH_Entities.Advisor" Role="Advisor" Multiplicity="0..1" />
@@ -110,4 +109,8 @@
     <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="CountryName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
   </EntityType>
+  <Association Name="RepresentationCompliant">
+    <End Type="CCH_Entities.Representation" Role="Representation" Multiplicity="1" />
+    <End Type="CCH_Entities.Compliant" Role="Compliant" Multiplicity="1" />
+  </Association>
 </Schema>

@@ -9,15 +9,25 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using CCHS_March_.Models;
+using System.Data.SqlClient;
+using System.Configuration;
+using Dapper;
+using CCHS_March_.Models.Data_Models;
 
 namespace CCHS_March_.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private CCH_EntitiesContainer db = new CCH_EntitiesContainer();
+
+        //This declares the variable that Dapper will use to acces the database.
+        private SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+
         public AccountController()
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
+
         }
 
         public AccountController(UserManager<ApplicationUser> userManager)
@@ -78,7 +88,15 @@ namespace CCHS_March_.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser() { UserName = model.UserName };
+                var user = new ApplicationUser() { 
+                    UserName = model.UserName,
+                    Firstname = model.Firstname,
+                    Lastname = model.Lastname,
+                    Email = model.Email,
+                    Department  = model.Department,
+                    Position = model.Position,
+                    AccountType = model.AccountType
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -307,6 +325,26 @@ namespace CCHS_March_.Controllers
             var linkedAccounts = UserManager.GetLogins(User.Identity.GetUserId());
             ViewBag.ShowRemoveButton = HasPassword() || linkedAccounts.Count > 1;
             return (ActionResult)PartialView("_RemoveAccountPartial", linkedAccounts);
+        }
+        
+        public ActionResult AccountIndex()
+        {
+
+            List<RegisterViewModel> users = new List<RegisterViewModel>();
+
+            try
+            {
+                con.Open();
+
+                users = con.Query<RegisterViewModel>("SELECT * FROM AspNetUsers").ToList();
+            }
+            catch
+            {
+                return View("Error");
+            }
+
+            return View(users);
+
         }
 
         protected override void Dispose(bool disposing)

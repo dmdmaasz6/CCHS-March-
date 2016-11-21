@@ -17,7 +17,7 @@ namespace CCHS_March_.Models.Data_Models
         public int Id { get; set; }
         public string Proof_of_Rep { get; set; }
     
-        public virtual Complainant Complainant { get; set; }
         public virtual Advisor Advisor { get; set; }
+        public virtual Compliant Compliant { get; set; }
     }
 }

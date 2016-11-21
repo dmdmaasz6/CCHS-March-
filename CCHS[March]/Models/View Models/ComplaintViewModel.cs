@@ -8,11 +8,11 @@ namespace CCHS_March_.Models.View_Models
 {
     public class ComplaintViewModel
     {
+        public string accFlag { get; set; }
         public Complainant complainant { get; set; }
         public Compliant complaint { get; set; }
         public HttpPostedFileBase rep_doc { get; set; }
         public Advisor advisor { get; set; }
         public BodyCorporate body_corporate { get; set; }
-
     }
 }

@@ -1,0 +1,155 @@
+﻿@model CCHS_March_.Models.View_Models.CreateCorporate
+
+@{
+    ViewBag.Title = "CreateIndividual";
+}
+
+<div class="form-horizontal">
+    @using (Html.BeginForm("CreateIndividual", "Complaint", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.complainant.Id, new { @id = "accID" })
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control", placeholder =  "First Name"})
+                    @Html.ValidationMessageFor(model => model.FirstName)
+                </div>
+            </div>*@
+
+        <div class="panel panel-ecb">
+            <div class="panel-heading">
+                <center><h3>Individual Complaint Submission</h3></center>
+            </div>
+            <div class="panel-body">
+
+                <div class="row">
+
+                    <div class="col-md-12">
+
+                        <div class="panel panel-ecb">
+                            <div class="panel-heading">
+                                <center><h4>Complaint Information</h4></center>
+                            </div>
+                            <div class="panel-body">
+                                <center>@Html.LabelFor(model => model.complaint.Heading, "Please enter a heading for the complaint")</center>
+                                @Html.TextBoxFor(model => model.complaint.Heading, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.complaint.Heading)
+                                <br />
+
+                                <center>@Html.LabelFor(model => model.complaint.SubjectMatter, "State Subject Matter to Which the Complaint Relates")</center>
+                                @Html.TextAreaFor(model => model.complaint.SubjectMatter, new { @class = "form-control notebook", rows = "6" })
+                                @Html.ValidationMessageFor(model => model.complaint.SubjectMatter)
+
+                                <center>@Html.LabelFor(model => model.complaint.Details, "Describe the Details and Grounds for the Complaint")</center>
+                                @Html.TextAreaFor(model => model.complaint.Details, new { @class = "form-control notebook", rows = "6" })
+                                @Html.ValidationMessageFor(model => model.complaint.Details)
+
+                                <center>@Html.LabelFor(model => model.complaint.MatterEscalation, "Has the complainant taken matter up already with any person in the ECB or, where the complaint is not lodged against the ECB, with the person against whom the complaint is lodged? If yes, provide full particulars")</center>
+                                @Html.TextAreaFor(model => model.complaint.MatterEscalation, new { @class = "form-control notebook", rows = "6" })
+                                @Html.ValidationMessageFor(model => model.complaint.MatterEscalation)
+
+                                <center>@Html.LabelFor(model => model.complaint.Purpose, "What is the purpose of the Complaint?")</center>
+                                @Html.TextAreaFor(model => model.complaint.Purpose, new { @class = "form-control notebook", rows = "6" })
+                                @Html.ValidationMessageFor(model => model.complaint.Purpose)
+
+                                <center>@Html.LabelFor(model => model.complaint.PurposedOutcome, "What outcome(s) is the complainant hoping for?")</center>
+                                @Html.TextAreaFor(model => model.complaint.PurposedOutcome, new { @class = "form-control notebook", rows = "6" })
+                                @Html.ValidationMessageFor(model => model.complaint.PurposedOutcome)
+
+                                <center>@Html.LabelFor(model => model.complaint.YearExplanation, "If more than 12 months have expired since the event which gave rise to the complaint, please explain why the complaint has not been lodged prior to the expiration of the 12 months")</center>
+                                @Html.TextAreaFor(model => model.complaint.YearExplanation, new { @class = "form-control notebook", rows = "6" })
+                                @Html.ValidationMessageFor(model => model.complaint.YearExplanation)
+
+                                <center>@Html.LabelFor(model => model.complaint.ConsentToInvestigation, "Does complainant consent to the ECB investigating the complaint with the individual/institution concerned (within and outside ECB, if any)?")</center>
+                                <select class="form-control" name="complaint.ConsentToInvestigation" id="complaint.ConsentToInvestigation">
+                                    <option value="">-- Select Answer --</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                                @Html.ValidationMessageFor(model => model.complaint.ConsentToInvestigation)
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="panel panel-ecb">
+                                <div class="panel-heading">
+                                    <center><h4>Representation Documents</h4></center>
+                                </div>
+                                <div class="panel-body">
+                                    @Html.TextBoxFor(model => model.rep_doc, new { @class = "form-control", placeholder = "Representation Documents", type = "file", accept = "application/pdf" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="panel panel-ecb">
+                                <div class="panel-heading">
+                                    <center><h4>Advisor Details</h4></center>
+                                </div>
+                                <div class="panel-body">
+                                    @Html.TextBoxFor(model => model.advisor.FirstName, new { @class = "form-control", placeholder = "Advisor Name" })
+
+                                    <br />
+
+                                    @Html.TextBoxFor(model => model.advisor.LastName, new { @class = "form-control", placeholder = "Advisor Surname" })
+
+                                    <br />
+
+                                    @Html.TextAreaFor(model => model.advisor.Address, new { @class = "form-control", placeholder = "Advisor Address" })
+
+                                    <br />
+
+                                    @Html.TextBoxFor(model => model.advisor.WorkTel, new { @class = "form-control", placeholder = "Work Telephones" })
+
+                                    <br />
+
+                                    @Html.TextBoxFor(model => model.advisor.Cell, new { @class = "form-control", placeholder = "Advisor Cell Number" })
+
+                                    <br />
+
+                                    @Html.TextBoxFor(model => model.advisor.EmailAddress, new { @class = "form-control", placeholder = "Advisor Email Address" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <div id="myModal" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <center>
+                                        <h4 class="modal-title">Account Not Found</h4>
+                                    </center>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <img src="~/Images/gremlins.gif" class="col-md-8 col-md-offset-2" />
+                                    </div>
+                                    <center><p>The Account Number you entered was incorrect, the gremlins might have grabbed your account?</p></center>
+                                    <p class="text-warning"><small>If you dont have an account please enter the fields manually.</small></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <button type="submit" class="btn btn-lg btn-block btn-success">Submit Complaint</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

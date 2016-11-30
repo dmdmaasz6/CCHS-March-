@@ -1,7 +1,7 @@
 ﻿@model CCHS_March_.Models.View_Models.ComplaintViewModel
 
 @{
-    ViewBag.Title = "CreateComplaint";
+    ViewBag.Title = "Complaint Details";
 }
 
 
@@ -101,22 +101,27 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <div class="panel panel-ecb">
-                            <div class="panel-heading">
-                                <center><h4>Body Corporate Information</h4></center>
-                            </div>
-                            <div class="panel-body">
+                    @{
+                        if (Model.complaint.Type == "Corporate")
+                        {
+                            <div class="col-md-4">
+                                        <div class="panel panel-ecb">
+                                            <div class="panel-heading">
+                                                <center><h4>Body Corporate Information</h4></center>
+                                            </div>
+                                            <div class="panel-body">
                                 
-                                @* This is where the country goes *@
-                                <p><b>Country of Origin :</b> @Model.body_corporate.CountryofOrigin</p>
+                                                @* This is where the country goes *@
+                                                <p><b>Country of Origin :</b> @Model.body_corporate.CountryofOrigin</p>
                                 
-                                <p><b>Organisation :</b> @Model.body_corporate.Body_Name</p>
+                                                <p><b>Organisation :</b> @Model.body_corporate.Body_Name</p>
                                 
-                                <p><b>Registration # :</b> @Model.body_corporate.Registration_Number</p>
-                            </div>
-                        </div>
-                    </div>
+                                                <p><b>Registration # :</b> @Model.body_corporate.Registration_Number</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                        }
+                    }
 
                     <div class="col-md-4">
                         <div class="panel panel-ecb">

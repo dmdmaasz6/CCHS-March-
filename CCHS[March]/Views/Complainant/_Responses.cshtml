@@ -1,0 +1,12 @@
+﻿@model IEnumerable<CCHS_March_.Models.Data_Models.Customer_Response>
+@using GridMvc.Html
+
+<center><h3>Complaint Responses</h3></center>
+
+@Html.Grid(Model).Named("ResponsesGrid").Columns(columns =>
+{
+    columns.Add(index => index.Id);
+    columns.Add(index => index.Subject).Titled("Subject").Sortable(true);
+    columns.Add(index => index.Date_Created).Titled("Date Sent").Sortable(true).Filterable(true);
+    //columns.Add().Encoded(false).Sanitized(false).SetWidth(30).RenderValueAs(o => Html.ActionLink("Details", "Details", "Complaint", new { id = o.Id }, new { @class = "form -control btn btn-info", }));
+}).WithPaging(10)

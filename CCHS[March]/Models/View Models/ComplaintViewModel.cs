@@ -15,4 +15,4 @@ namespace CCHS_March_.Models.View_Models
         public Advisor advisor { get; set; }
         public BodyCorporate body_corporate { get; set; }
     }
-}
+} 

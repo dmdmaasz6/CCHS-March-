@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 05/26/2016 23:40:03
+-- Date Created: 11/28/2016 03:41:41
 -- Generated from EDMX file: C:\Users\Admin\Documents\GitHub\CCHS[March]]\CCHS[March]]\Models\Data Models\CCH_Entities.edmx
 -- --------------------------------------------------
 
@@ -49,9 +49,6 @@ GO
 IF OBJECT_ID(N'[dbo].[BodyCorporates]', 'U') IS NOT NULL
     DROP TABLE [dbo].[BodyCorporates];
 GO
-IF OBJECT_ID(N'[dbo].[Countries]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Countries];
-GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -60,6 +57,7 @@ GO
 -- Creating table 'Compliants'
 CREATE TABLE [dbo].[Compliants] (
     [Id] int IDENTITY(1,1) NOT NULL,
+    [Type] nvarchar(max)  NOT NULL,
     [SubjectMatter] nvarchar(max)  NOT NULL,
     [Details] nvarchar(max)  NOT NULL,
     [MatterEscalation] nvarchar(max)  NOT NULL,
@@ -88,6 +86,7 @@ CREATE TABLE [dbo].[Complainants] (
     [AccountNumber] nvarchar(max)  NOT NULL,
     [FirstName] nvarchar(max)  NOT NULL,
     [LastName] nvarchar(max)  NOT NULL,
+    [National_Id] nvarchar(max)  NOT NULL,
     [Nationality] nvarchar(max)  NOT NULL,
     [PO_Box] nvarchar(max)  NOT NULL,
     [Tel_Number] nvarchar(max)  NOT NULL,
@@ -119,10 +118,23 @@ CREATE TABLE [dbo].[BodyCorporates] (
 );
 GO
 
--- Creating table 'Countries'
-CREATE TABLE [dbo].[Countries] (
-    [ID] int IDENTITY(1,1) NOT NULL,
-    [CountryName] nvarchar(100)  NOT NULL
+-- Creating table 'Customer_Response'
+CREATE TABLE [dbo].[Customer_Response] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Subject] nvarchar(max)  NOT NULL,
+    [Message_Body] nvarchar(max)  NOT NULL,
+    [Date_Created] datetime  NOT NULL,
+    [Parent_Message_Id] bigint  NOT NULL,
+    [Compliant_Id] int  NOT NULL
+);
+GO
+
+-- Creating table 'Attachments'
+CREATE TABLE [dbo].[Attachments] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Location] nvarchar(max)  NOT NULL,
+    [Date_Created] datetime  NOT NULL,
+    [Customer_Response_Id] int  NOT NULL
 );
 GO
 
@@ -160,10 +172,16 @@ ADD CONSTRAINT [PK_BodyCorporates]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [ID] in table 'Countries'
-ALTER TABLE [dbo].[Countries]
-ADD CONSTRAINT [PK_Countries]
-    PRIMARY KEY CLUSTERED ([ID] ASC);
+-- Creating primary key on [Id] in table 'Customer_Response'
+ALTER TABLE [dbo].[Customer_Response]
+ADD CONSTRAINT [PK_Customer_Response]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Attachments'
+ALTER TABLE [dbo].[Attachments]
+ADD CONSTRAINT [PK_Attachments]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
 -- --------------------------------------------------
@@ -224,6 +242,34 @@ ADD CONSTRAINT [FK_RepresentationCompliant]
 CREATE INDEX [IX_FK_RepresentationCompliant]
 ON [dbo].[Representations]
     ([Compliant_Id]);
+GO
+
+-- Creating foreign key on [Compliant_Id] in table 'Customer_Response'
+ALTER TABLE [dbo].[Customer_Response]
+ADD CONSTRAINT [FK_Response_Compliant]
+    FOREIGN KEY ([Compliant_Id])
+    REFERENCES [dbo].[Compliants]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_Response_Compliant'
+CREATE INDEX [IX_FK_Response_Compliant]
+ON [dbo].[Customer_Response]
+    ([Compliant_Id]);
+GO
+
+-- Creating foreign key on [Customer_Response_Id] in table 'Attachments'
+ALTER TABLE [dbo].[Attachments]
+ADD CONSTRAINT [FK_AttachmentsCustomer_Response]
+    FOREIGN KEY ([Customer_Response_Id])
+    REFERENCES [dbo].[Customer_Response]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_AttachmentsCustomer_Response'
+CREATE INDEX [IX_FK_AttachmentsCustomer_Response]
+ON [dbo].[Attachments]
+    ([Customer_Response_Id]);
 GO
 
 -- --------------------------------------------------

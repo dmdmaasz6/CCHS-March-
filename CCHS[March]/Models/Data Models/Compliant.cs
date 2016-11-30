@@ -14,7 +14,13 @@ namespace CCHS_March_.Models.Data_Models
     
     public partial class Compliant
     {
+        public Compliant()
+        {
+            this.Customer_Response = new HashSet<Customer_Response>();
+        }
+    
         public int Id { get; set; }
+        public string Type { get; set; }
         public string SubjectMatter { get; set; }
         public string Details { get; set; }
         public string MatterEscalation { get; set; }
@@ -29,5 +35,6 @@ namespace CCHS_March_.Models.Data_Models
         public virtual BodyCorporate BodyCorporate { get; set; }
         public virtual Complainant Complainant { get; set; }
         public virtual Representation Representation { get; set; }
+        public virtual ICollection<Customer_Response> Customer_Response { get; set; }
     }
 }

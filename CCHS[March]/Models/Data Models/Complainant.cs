@@ -18,6 +18,7 @@ namespace CCHS_March_.Models.Data_Models
         public string AccountNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string National_Id { get; set; }
         public string Nationality { get; set; }
         public string PO_Box { get; set; }
         public string Tel_Number { get; set; }

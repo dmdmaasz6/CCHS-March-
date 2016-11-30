@@ -11,7 +11,8 @@
     <EntitySet Name="Complainants" EntityType="CCH_Entities.Store.Complainants" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Advisors" EntityType="CCH_Entities.Store.Advisors" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="BodyCorporates" EntityType="CCH_Entities.Store.BodyCorporates" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Countries" EntityType="CCH_Entities.Store.Countries" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Customer_Response" EntityType="CCH_Entities.Store.Customer_Response" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Attachments" EntityType="CCH_Entities.Store.Attachments" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="CompliantBodyCorporate" Association="CCH_Entities.Store.CompliantBodyCorporate">
       <End Role="Compliant" EntitySet="Compliants" />
       <End Role="BodyCorporate" EntitySet="BodyCorporates" />
@@ -28,12 +29,21 @@
       <End Role="Representation" EntitySet="Representations" />
       <End Role="Compliant" EntitySet="Compliants" />
     </AssociationSet>
+    <AssociationSet Name="Response_Compliant" Association="CCH_Entities.Store.Response_Compliant">
+      <End Role="Customer_Response" EntitySet="Customer_Response" />
+      <End Role="Compliant" EntitySet="Compliants" />
+    </AssociationSet>
+    <AssociationSet Name="AttachmentsCustomer_Response" Association="CCH_Entities.Store.AttachmentsCustomer_Response">
+      <End Role="Attachments" EntitySet="Attachments" />
+      <End Role="Customer_Response" EntitySet="Customer_Response" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Compliants">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Type" Type="nvarchar(max)" Nullable="false" />
     <Property Name="SubjectMatter" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Details" Type="nvarchar(max)" Nullable="false" />
     <Property Name="MatterEscalation" Type="nvarchar(max)" Nullable="false" />
@@ -62,6 +72,7 @@
     <Property Name="AccountNumber" Type="nvarchar(max)" Nullable="false" />
     <Property Name="FirstName" Type="nvarchar(max)" Nullable="false" />
     <Property Name="LastName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="National_Id" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Nationality" Type="nvarchar(max)" Nullable="false" />
     <Property Name="PO_Box" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Tel_Number" Type="nvarchar(max)" Nullable="false" />
@@ -91,12 +102,25 @@
     <Property Name="Body_Name" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Compliant_Id" Type="int" Nullable="false" />
   </EntityType>
-  <EntityType Name="Countries">
+  <EntityType Name="Customer_Response">
     <Key>
-      <PropertyRef Name="ID" />
+      <PropertyRef Name="Id" />
     </Key>
-    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="CountryName" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Subject" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Message_Body" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Date_Created" Type="datetime" Nullable="false" />
+    <Property Name="Parent_Message_Id" Type="bigint" Nullable="false" />
+    <Property Name="Compliant_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Attachments">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Location" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Date_Created" Type="datetime" Nullable="false" />
+    <Property Name="Customer_Response_Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="CompliantBodyCorporate">
     <End Role="Compliant" Type="CCH_Entities.Store.Compliants" Multiplicity="1" />
@@ -146,6 +170,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="Response_Compliant">
+    <End Role="Customer_Response" Type="CCH_Entities.Store.Customer_Response" Multiplicity="*" />
+    <End Role="Compliant" Type="CCH_Entities.Store.Compliants" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Compliant">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Customer_Response">
+        <PropertyRef Name="Compliant_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AttachmentsCustomer_Response">
+    <End Role="Attachments" Type="CCH_Entities.Store.Attachments" Multiplicity="*" />
+    <End Role="Customer_Response" Type="CCH_Entities.Store.Customer_Response" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Customer_Response">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Attachments">
+        <PropertyRef Name="Customer_Response_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -168,10 +216,19 @@
             <End Role="Representation" EntitySet="Representations" />
             <End Role="Advisor" EntitySet="Advisors" />
           </AssociationSet>
-          <EntitySet Name="Countries" EntityType="CCH_Entities.Country" />
           <AssociationSet Name="RepresentationCompliant" Association="CCH_Entities.RepresentationCompliant">
             <End Role="Representation" EntitySet="Representations" />
             <End Role="Compliant" EntitySet="Compliants" />
+          </AssociationSet>
+          <EntitySet Name="Customer_Response" EntityType="CCH_Entities.Customer_Response" />
+          <AssociationSet Name="Response_Compliant" Association="CCH_Entities.Response_Compliant">
+            <End Role="Customer_Response" EntitySet="Customer_Response" />
+            <End Role="Compliant" EntitySet="Compliants" />
+          </AssociationSet>
+          <EntitySet Name="Attachments" EntityType="CCH_Entities.Attachments" />
+          <AssociationSet Name="AttachmentsCustomer_Response" Association="CCH_Entities.AttachmentsCustomer_Response">
+            <End Role="Attachments" EntitySet="Attachments" />
+            <End Role="Customer_Response" EntitySet="Customer_Response" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Compliant">
@@ -179,6 +236,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" Nullable="false" />
           <Property Name="SubjectMatter" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Details" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="MatterEscalation" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -192,6 +250,7 @@
           <NavigationProperty Name="Representation" Relationship="CCH_Entities.RepresentationCompliant" FromRole="Compliant" ToRole="Representation" />
           <Property Name="Heading" Type="String" Nullable="false" />
           <Property Name="Status" Type="String" Nullable="false" />
+          <NavigationProperty Name="Customer_Response" Relationship="CCH_Entities.Response_Compliant" FromRole="Compliant" ToRole="Customer_Response" />
         </EntityType>
         <EntityType Name="Representation">
           <Key>
@@ -210,6 +269,7 @@
           <Property Name="AccountNumber" Type="String" Nullable="false" />
           <Property Name="FirstName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="LastName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="National_Id" Type="String" Nullable="false" />
           <Property Name="Nationality" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="PO_Box" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Tel_Number" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -252,16 +312,38 @@
           <End Type="CCH_Entities.Representation" Role="Representation" Multiplicity="1" />
           <End Type="CCH_Entities.Advisor" Role="Advisor" Multiplicity="0..1" />
         </Association>
-        <EntityType Name="Country">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CountryName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
         <Association Name="RepresentationCompliant">
           <End Type="CCH_Entities.Representation" Role="Representation" Multiplicity="1" />
           <End Type="CCH_Entities.Compliant" Role="Compliant" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Customer_Response">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Subject" Type="String" Nullable="false" />
+          <Property Name="Message_Body" Type="String" Nullable="false" />
+          <Property Name="Date_Created" Type="DateTime" Nullable="false" />
+          <Property Name="Parent_Message_Id" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Compliant" Relationship="CCH_Entities.Response_Compliant" FromRole="Customer_Response" ToRole="Compliant" />
+          <NavigationProperty Name="Attachments" Relationship="CCH_Entities.AttachmentsCustomer_Response" FromRole="Customer_Response" ToRole="Attachments" />
+        </EntityType>
+        <Association Name="Response_Compliant">
+          <End Type="CCH_Entities.Customer_Response" Role="Customer_Response" Multiplicity="*" />
+          <End Type="CCH_Entities.Compliant" Role="Compliant" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Attachments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Customer_Response" Relationship="CCH_Entities.AttachmentsCustomer_Response" FromRole="Attachments" ToRole="Customer_Response" />
+          <Property Name="Location" Type="String" Nullable="false" />
+          <Property Name="Date_Created" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <Association Name="AttachmentsCustomer_Response">
+          <End Type="CCH_Entities.Attachments" Role="Attachments" Multiplicity="*" />
+          <End Type="CCH_Entities.Customer_Response" Role="Customer_Response" Multiplicity="1" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -273,6 +355,7 @@
       <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Compliant)">
         <MappingFragment StoreEntitySet="Compliants">
           <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
           <ScalarProperty Name="SubjectMatter" ColumnName="SubjectMatter" />
           <ScalarProperty Name="Details" ColumnName="Details" />
           <ScalarProperty Name="MatterEscalation" ColumnName="MatterEscalation" />
@@ -301,6 +384,7 @@
           <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
           <ScalarProperty Name="FirstName" ColumnName="FirstName" />
           <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="National_Id" ColumnName="National_Id" />
           <ScalarProperty Name="Nationality" ColumnName="Nationality" />
           <ScalarProperty Name="PO_Box" ColumnName="PO_Box" />
           <ScalarProperty Name="Tel_Number" ColumnName="Tel_Number" />
@@ -332,11 +416,23 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Countries">
-      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Country)">
-        <MappingFragment StoreEntitySet="Countries">
-          <ScalarProperty Name="ID" ColumnName="ID" />
-          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+    <EntitySetMapping Name="Customer_Response">
+      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Customer_Response)">
+        <MappingFragment StoreEntitySet="Customer_Response">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Subject" ColumnName="Subject" />
+          <ScalarProperty Name="Message_Body" ColumnName="Message_Body" />
+          <ScalarProperty Name="Date_Created" ColumnName="Date_Created" />
+          <ScalarProperty Name="Parent_Message_Id" ColumnName="Parent_Message_Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Attachments">
+      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Attachments)">
+        <MappingFragment StoreEntitySet="Attachments">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+          <ScalarProperty Name="Date_Created" ColumnName="Date_Created" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -369,6 +465,22 @@
         <ScalarProperty Name="Id" ColumnName="Compliant_Id" />
       </EndProperty>
       <EndProperty Name="Representation">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="Response_Compliant" TypeName="CCH_Entities.Response_Compliant" StoreEntitySet="Customer_Response">
+      <EndProperty Name="Compliant">
+        <ScalarProperty Name="Id" ColumnName="Compliant_Id" />
+      </EndProperty>
+      <EndProperty Name="Customer_Response">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AttachmentsCustomer_Response" TypeName="CCH_Entities.AttachmentsCustomer_Response" StoreEntitySet="Attachments">
+      <EndProperty Name="Customer_Response">
+        <ScalarProperty Name="Id" ColumnName="Customer_Response_Id" />
+      </EndProperty>
+      <EndProperty Name="Attachments">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

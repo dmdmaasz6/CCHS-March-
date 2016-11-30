@@ -18,10 +18,19 @@
       <End Role="Representation" EntitySet="Representations" />
       <End Role="Advisor" EntitySet="Advisors" />
     </AssociationSet>
-    <EntitySet Name="Countries" EntityType="CCH_Entities.Country" />
     <AssociationSet Name="RepresentationCompliant" Association="CCH_Entities.RepresentationCompliant">
       <End Role="Representation" EntitySet="Representations" />
       <End Role="Compliant" EntitySet="Compliants" />
+    </AssociationSet>
+    <EntitySet Name="Customer_Response" EntityType="CCH_Entities.Customer_Response" />
+    <AssociationSet Name="Response_Compliant" Association="CCH_Entities.Response_Compliant">
+      <End Role="Customer_Response" EntitySet="Customer_Response" />
+      <End Role="Compliant" EntitySet="Compliants" />
+    </AssociationSet>
+    <EntitySet Name="Attachments" EntityType="CCH_Entities.Attachments" />
+    <AssociationSet Name="AttachmentsCustomer_Response" Association="CCH_Entities.AttachmentsCustomer_Response">
+      <End Role="Attachments" EntitySet="Attachments" />
+      <End Role="Customer_Response" EntitySet="Customer_Response" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Compliant">
@@ -29,6 +38,7 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="String" Nullable="false" />
     <Property Name="SubjectMatter" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="Details" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="MatterEscalation" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -42,6 +52,7 @@
     <NavigationProperty Name="Representation" Relationship="CCH_Entities.RepresentationCompliant" FromRole="Compliant" ToRole="Representation" />
     <Property Name="Heading" Type="String" Nullable="false" />
     <Property Name="Status" Type="String" Nullable="false" />
+    <NavigationProperty Name="Customer_Response" Relationship="CCH_Entities.Response_Compliant" FromRole="Compliant" ToRole="Customer_Response" />
   </EntityType>
   <EntityType Name="Representation">
     <Key>
@@ -60,6 +71,7 @@
     <Property Name="AccountNumber" Type="String" Nullable="false" />
     <Property Name="FirstName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="LastName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="National_Id" Type="String" Nullable="false" />
     <Property Name="Nationality" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="PO_Box" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="Tel_Number" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -102,15 +114,37 @@
     <End Type="CCH_Entities.Representation" Role="Representation" Multiplicity="1" />
     <End Type="CCH_Entities.Advisor" Role="Advisor" Multiplicity="0..1" />
   </Association>
-  <EntityType Name="Country">
-    <Key>
-      <PropertyRef Name="ID" />
-    </Key>
-    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="CountryName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-  </EntityType>
   <Association Name="RepresentationCompliant">
     <End Type="CCH_Entities.Representation" Role="Representation" Multiplicity="1" />
     <End Type="CCH_Entities.Compliant" Role="Compliant" Multiplicity="1" />
+  </Association>
+  <EntityType Name="Customer_Response">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Subject" Type="String" Nullable="false" />
+    <Property Name="Message_Body" Type="String" Nullable="false" />
+    <Property Name="Date_Created" Type="DateTime" Nullable="false" />
+    <Property Name="Parent_Message_Id" Type="Int64" Nullable="false" />
+    <NavigationProperty Name="Compliant" Relationship="CCH_Entities.Response_Compliant" FromRole="Customer_Response" ToRole="Compliant" />
+    <NavigationProperty Name="Attachments" Relationship="CCH_Entities.AttachmentsCustomer_Response" FromRole="Customer_Response" ToRole="Attachments" />
+  </EntityType>
+  <Association Name="Response_Compliant">
+    <End Type="CCH_Entities.Customer_Response" Role="Customer_Response" Multiplicity="*" />
+    <End Type="CCH_Entities.Compliant" Role="Compliant" Multiplicity="1" />
+  </Association>
+  <EntityType Name="Attachments">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="Customer_Response" Relationship="CCH_Entities.AttachmentsCustomer_Response" FromRole="Attachments" ToRole="Customer_Response" />
+    <Property Name="Location" Type="String" Nullable="false" />
+    <Property Name="Date_Created" Type="DateTime" Nullable="false" />
+  </EntityType>
+  <Association Name="AttachmentsCustomer_Response">
+    <End Type="CCH_Entities.Attachments" Role="Attachments" Multiplicity="*" />
+    <End Type="CCH_Entities.Customer_Response" Role="Customer_Response" Multiplicity="1" />
   </Association>
 </Schema>

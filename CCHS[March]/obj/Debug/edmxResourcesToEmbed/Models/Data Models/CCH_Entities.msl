@@ -5,6 +5,7 @@
       <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Compliant)">
         <MappingFragment StoreEntitySet="Compliants">
           <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
           <ScalarProperty Name="SubjectMatter" ColumnName="SubjectMatter" />
           <ScalarProperty Name="Details" ColumnName="Details" />
           <ScalarProperty Name="MatterEscalation" ColumnName="MatterEscalation" />
@@ -33,6 +34,7 @@
           <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
           <ScalarProperty Name="FirstName" ColumnName="FirstName" />
           <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="National_Id" ColumnName="National_Id" />
           <ScalarProperty Name="Nationality" ColumnName="Nationality" />
           <ScalarProperty Name="PO_Box" ColumnName="PO_Box" />
           <ScalarProperty Name="Tel_Number" ColumnName="Tel_Number" />
@@ -64,11 +66,23 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Countries">
-      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Country)">
-        <MappingFragment StoreEntitySet="Countries">
-          <ScalarProperty Name="ID" ColumnName="ID" />
-          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+    <EntitySetMapping Name="Customer_Response">
+      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Customer_Response)">
+        <MappingFragment StoreEntitySet="Customer_Response">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Subject" ColumnName="Subject" />
+          <ScalarProperty Name="Message_Body" ColumnName="Message_Body" />
+          <ScalarProperty Name="Date_Created" ColumnName="Date_Created" />
+          <ScalarProperty Name="Parent_Message_Id" ColumnName="Parent_Message_Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Attachments">
+      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Attachments)">
+        <MappingFragment StoreEntitySet="Attachments">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+          <ScalarProperty Name="Date_Created" ColumnName="Date_Created" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -101,6 +115,22 @@
         <ScalarProperty Name="Id" ColumnName="Compliant_Id" />
       </EndProperty>
       <EndProperty Name="Representation">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="Response_Compliant" TypeName="CCH_Entities.Response_Compliant" StoreEntitySet="Customer_Response">
+      <EndProperty Name="Compliant">
+        <ScalarProperty Name="Id" ColumnName="Compliant_Id" />
+      </EndProperty>
+      <EndProperty Name="Customer_Response">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AttachmentsCustomer_Response" TypeName="CCH_Entities.AttachmentsCustomer_Response" StoreEntitySet="Attachments">
+      <EndProperty Name="Customer_Response">
+        <ScalarProperty Name="Id" ColumnName="Customer_Response_Id" />
+      </EndProperty>
+      <EndProperty Name="Attachments">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

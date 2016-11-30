@@ -180,6 +180,9 @@
     <Compile Include="Models\Data Models\Advisor.cs">
       <DependentUpon>CCH_Entities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Data Models\Attachments.cs">
+      <DependentUpon>CCH_Entities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Data Models\BodyCorporate.cs">
       <DependentUpon>CCH_Entities.tt</DependentUpon>
     </Compile>
@@ -204,16 +207,23 @@
     <Compile Include="Models\Data Models\Compliant.cs">
       <DependentUpon>CCH_Entities.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Data Models\Country.cs">
+    <Compile Include="Models\Data Models\Customer_Response.cs">
       <DependentUpon>CCH_Entities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Data Models\Representation.cs">
       <DependentUpon>CCH_Entities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DataConversion.cs" />
+    <Compile Include="Models\InsertFunctions.cs" />
+    <Compile Include="Models\View Models\ComplainantAccessViewModel.cs" />
+    <Compile Include="Models\View Models\ComplainantLoginViewModel.cs" />
+    <Compile Include="Models\View Models\ComplainantViewModel.cs" />
     <Compile Include="Models\View Models\ComplaintIndexViewModel.cs" />
     <Compile Include="Models\View Models\ComplaintViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\View Models\CreateComplaintViewModels.cs" />
+    <Compile Include="Models\View Models\ResponseViewModel.cs" />
+    <Compile Include="Models\View Models\SubmitResponseViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -431,6 +441,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\FormStyles.css" />
     <Content Include="Content\Gridmvc.css" />
+    <Content Include="Content\Mail.css" />
+    <Content Include="Content\Simditor\simditor.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -439,9 +451,16 @@
     <Content Include="Images\asc-dsc1.png" />
     <Content Include="Images\bg.gif" />
     <Content Include="Images\gremlins.gif" />
+    <Content Include="Images\loading.gif" />
+    <Content Include="Images\loading2.gif" />
+    <Content Include="Images\loading3.gif" />
+    <Content Include="Images\loading4.gif" />
     <Content Include="Images\logo.png" />
+    <Content Include="Images\Not Found.png" />
     <Content Include="Images\notebook.png" />
     <Content Include="Images\PowerSaver.png" />
+    <Content Include="Images\save_energy.png" />
+    <Content Include="Images\Verified.png" />
     <Content Include="Models\Data Models\CCH_Entities.edmx.sql" />
     <Content Include="Read Me.txt" />
     <Content Include="Scripts\bootstrap.js" />
@@ -505,6 +524,9 @@
     <Content Include="Content\bootstrap-datepicker-master\.gitignore" />
     <Content Include="Content\bootstrap-datepicker-master\.editorconfig" />
     <Content Include="Grid.mvc.readme" />
+    <Content Include="Content\Simditor\editor.scss" />
+    <Content Include="Content\Simditor\fonticon.scss" />
+    <Content Include="Content\Simditor\simditor.scss" />
     <None Include="Properties\PublishProfiles\CCHS_Offline.pubxml" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\Custom\ComplaintCreate.js" />
@@ -521,6 +543,15 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Simditor\hotkeys.js" />
+    <Content Include="Scripts\Simditor\hotkeys.min.js" />
+    <Content Include="Scripts\Simditor\jquery.min.js" />
+    <Content Include="Scripts\Simditor\module.js" />
+    <Content Include="Scripts\Simditor\module.min.js" />
+    <Content Include="Scripts\Simditor\simditor.js" />
+    <Content Include="Scripts\Simditor\simditor.min.js" />
+    <Content Include="Scripts\Simditor\uploader.js" />
+    <Content Include="Scripts\Simditor\uploader.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -556,11 +587,19 @@
     <Content Include="Views\Shared\_Grid.cshtml" />
     <Content Include="Views\Complaint\Details.cshtml" />
     <Content Include="Views\Account\AccountIndex.cshtml" />
+    <Content Include="Views\Complainant\Login.cshtml" />
+    <Content Include="Views\Complainant\Register.cshtml" />
+    <Content Include="Views\Complainant\Index.cshtml" />
+    <Content Include="Views\Complaint\CreateIndividual.cshtml" />
+    <Content Include="Views\Complaint\CreateCorporate.cshtml" />
+    <Content Include="Views\Complainant\_Complaints.cshtml" />
+    <Content Include="Views\Complainant\_Responses.cshtml" />
+    <Content Include="Views\Complainant\_SubmitResponse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="attachments\" />
     <Folder Include="Rep_Data\" />
-    <Folder Include="Views\Complainant\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

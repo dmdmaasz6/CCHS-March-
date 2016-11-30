@@ -30,6 +30,7 @@ namespace CCHS_March_.Models.Data_Models
         public virtual DbSet<Complainant> Complainants { get; set; }
         public virtual DbSet<Advisor> Advisors { get; set; }
         public virtual DbSet<BodyCorporate> BodyCorporates { get; set; }
-        public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<Customer_Response> Customer_Response { get; set; }
+        public virtual DbSet<Attachments> Attachments { get; set; }
     }
 }

@@ -32,5 +32,6 @@ namespace CCHS_March_.Models.Data_Models
         public virtual DbSet<BodyCorporate> BodyCorporates { get; set; }
         public virtual DbSet<Customer_Response> Customer_Response { get; set; }
         public virtual DbSet<Attachments> Attachments { get; set; }
+        public virtual DbSet<Assistant> Assistants { get; set; }
     }
 }

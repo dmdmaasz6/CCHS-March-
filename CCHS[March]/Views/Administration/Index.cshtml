@@ -1,0 +1,235 @@
+﻿@model IEnumerable<CCHS_March_.Models.Data_Models.Compliant>
+@using GridMvc.Html
+
+@section styles{
+    <link href="~/Content/Mail.css" rel="stylesheet" />
+    <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'>
+    <link href="@Url.Content("~/Content/Gridmvc.css")" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Simditor/simditor.css" rel="stylesheet" />
+}
+
+<div style="padding: 0px;">
+
+    <div class="mail-box">
+        <aside class="sm-side">
+            <div class="user-head">
+                <div class="row">
+                    @using (Html.BeginForm("LogOff", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="user-name">
+                                    <h3>
+                                        <a href="#" style="color:white;">@User.Identity.Name</a>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-default btn-block" type="submit">Logout</button>
+                            </div>
+                        </div>
+
+
+
+                    }
+                </div>
+                
+
+                @*<a class="mail-dropdown pull-right" href="javascript:;">
+                    <i class="fa fa-chevron-down"></i>
+                    <ul>
+                        <li><a href="/Account/LogOff"></a></li>
+                    </ul>
+                </a>*@
+            </div>
+            <ul class="inbox-nav inbox-divider">
+                <li class="active">
+                    <a href="" onclick="getComplaints()"><i class="fa fa-inbox"></i> Pending Responses <span class="label label-danger pull-right">2</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-envelope-o"></i> My Responses</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-bookmark-o"></i> Important</a>
+                </li>
+                <li>
+                    <a href="#"><i class=" fa fa-external-link"></i> Drafts <span class="label label-info pull-right">30</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class=" fa fa-trash-o"></i> Trash</a>
+                </li>
+            </ul>
+            <div class="inbox-body text-center">
+                <div class="btn-group">
+                    <a class="btn mini btn-primary" href="javascript:;">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </div>
+                <div class="btn-group">
+                    <a class="btn mini btn-success" href="javascript:;">
+                        <i class="fa fa-phone"></i>
+                    </a>
+                </div>
+                <div class="btn-group">
+                    <a class="btn mini btn-info" href="javascript:;">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                </div>
+            </div>
+        </aside>
+        <aside class="lg-side">
+            <div class="inbox-head">
+                <h3>My Complaints</h3>
+                <form action="#" class="pull-right position">
+                    <div class="input-append">
+                        <input type="text" class="sr-input" placeholder="Search Complaints">
+                        <button class="btn sr-btn" type="button"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+            <div class="inbox-body">
+                <div id="partial">
+
+                    <div class="mail-option">
+                        <div class="chk-all">
+                            <input type="checkbox" class="mail-checkbox mail-group-checkbox">
+                            <div class="btn-group">
+                                <a data-toggle="dropdown" href="#" class="btn mini all" aria-expanded="false">
+                                    All
+                                    <i class="fa fa-angle-down "></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#"> None</a></li>
+                                    <li><a href="#"> Read</a></li>
+                                    <li><a href="#"> Unread</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <a onclick="getComplaints()" href="" class="btn mini tooltips">
+                                <i class=" fa fa-refresh"></i>
+                            </a>
+                        </div>
+                        <ul class="unstyled inbox-pagination">
+                            <li><span>1-50 of 234</span></li>
+                            <li>
+                                <a class="np-btn" href="#"><i class="fa fa-angle-left  pagination-left"></i></a>
+                            </li>
+                            <li>
+                                <a class="np-btn" href="#"><i class="fa fa-angle-right pagination-right"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    @Html.Grid(Model).Named("ComplaintsGrid").Columns(columns =>
+                    {
+                        columns.Add(index => index.Id, true);
+                        columns.Add(index => index.Type).Titled("Type").Sortable(true);
+                        columns.Add(index => index.Heading).Titled("Heading").Sortable(true).Filterable(true);
+                        columns.Add(index => index.Status).Titled("Status").Sortable(true);
+                        columns.Add(index => index.DateOfSubmission).Titled("Date of Submission").Sortable(true).Filterable(true);
+                        //columns.Add().Encoded(false).Sanitized(false).SetWidth(30).RenderValueAs(o => Html.ActionLink("Details", "Details", "Complaint", new { id = o.Id }, new { @class = "form -control btn btn-info", }));
+                    }).WithPaging(10)
+                </div>
+
+                <div id="loader" hidden="hidden">
+                    <img src="/Images/loading4.gif" class="col-md-6 col-md-offset-3" />
+                </div>
+
+                <div id="sumbitResponse">
+
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+@section scripts{
+    <script src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/Scripts/gridmvc.min.js")" type="text/javascript"> </script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/Scripts/Simditor/module.js"></script>
+    <script type="text/javascript" src="/Scripts/Simditor/hotkeys.js"></script>
+    <script type="text/javascript" src="/Scripts/Simditor/uploader.js"></script>
+    <script type="text/javascript" src="/Scripts/Simditor/simditor.js"></script>
+
+    <script type="text/javascript">
+
+        function getComplaints() {
+            $("#partial").html('');
+            $("#loader").removeAttr("hidden");
+
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "/Complainant/ComplainantComplaints/",
+                success: function (data) {
+                    $("#loader").attr("hidden", "hidden");
+                    $("#partial").html('');
+                    $("#partial").html(data);
+                    $("#compose_button").attr("disabled");
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to retrieve compaints.');
+                }
+            });
+        }
+
+        function getSubmitResponse() {
+            $("#loader").removeAttr("hidden");
+
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "/Complainant/CreateResponse/",
+                success: function (data) {
+                    $("#loader").attr("hidden", "hidden");
+                    $("#sumbitResponse").html('');
+                    $("#sumbitResponse").html(data);
+                    $("#myModal").modal("show");
+
+                    Simditor.locale = 'en-US';
+                    var editor = new Simditor({
+                        textarea: $('#editor'),
+                        pasteImage: false
+                        //optional options
+                    });
+
+                    //$("#compose_button").attr("disabled");
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to open response editor.');
+                    $("#loader").attr("hidden", "hidden");
+                }
+            });
+        }
+
+        $(function () {
+            pageGrids.ComplaintsGrid.onRowSelect(function (e) {
+                //alert(e.row.Id);
+
+                $("#partial").html('');
+                $("#loader").removeAttr("hidden");
+
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "/Complainant/Responses/",
+                    data: { "id": e.row.Id },
+                    success: function (data) {
+                        $("#loader").attr("hidden", "hidden");
+                        $("#partial").html('');
+                        $("#partial").html(data);
+                        $("#compose_button").removeAttr("disabled");
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve compaints.');
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,279 @@
+﻿@model CCHS_March_.Models.View_Models.ManageViewModel
+
+<div class="form-horizontal">
+    <hr />
+    @*<div class="form-group">
+            @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control", placeholder =  "First Name"})
+                @Html.ValidationMessageFor(model => model.FirstName)
+            </div>
+        </div>*@
+
+    <div class="panel panel-ecb">
+        <div class="panel-heading">
+            <a href="/Administration/Index" class="pull-left btn btn-danger btn-lg">Back</a> <center><h3>ManageComplaint</h3></center>
+        </div>
+        <div class="panel-body">
+
+            <div class="row">
+
+                <div class="col-md-8">
+
+                    <div class="panel panel-ecb">
+                        <div class="panel-heading">
+                            <center><h4>Complaint Information</h4></center>
+                        </div>
+                        <div class="panel-body">
+                            <center><b>State Subject Matter to Which the Complaint Relates</b></center>
+                            <p align="justify">@Model.complaint.SubjectMatter</p>
+
+                            <br />
+                            <br />
+
+                            <center><b>Describe the Details and Grounds for the Complaint</b></center>
+                            <p align="justify">@Model.complaint.Details</p>
+
+                            <br />
+                            <br />
+
+                            <center><b>Has the complainant taken matter up already with any person in the ECB or, where the complaint is not lodged against the ECB, with the person against whom the complaint is lodged? If yes, provide full particulars</b></center>
+                            <p align="justify">@Model.complaint.MatterEscalation</p>
+
+                            <br />
+                            <br />
+
+                            <center><b>What is the purpose of the Complaint?</b></center>
+                            <p align="justify">@Model.complaint.Purpose</p>
+
+                            <br />
+                            <br />
+
+                            <center><b>What outcome(s) is the complainant hoping for?</b></center>
+                            <p align="justify">@Model.complaint.PurposedOutcome</p>
+
+                            <br />
+                            <br />
+
+                            <center><b>If more than 12 months have expired since the event which gave rise to the complaint, please explain why the complaint has not been lodged prior to the expiration of the 12 months</b></center>
+                            <p align="justify">@Model.complaint.YearExplanation</p>
+
+                            <br />
+                            <br />
+
+                            <center><b>Does complainant consent to the ECB investigating the complaint with the individual/institution concerned (within and outside ECB, if any)?</b></center>
+                            <center>@Model.complaint.ConsentToInvestigation</center>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel panel-ecb">
+                        <div class="panel-heading">
+                            <center><h4>Complainant Details</h4></center>
+                        </div>
+                        <div class="panel-body">
+                            <p><b>Name :</b> @Model.complainant.FirstName @Model.complainant.LastName</p>
+
+                            @* This is where language goes *@
+                            <p><b>Language :</b> @Model.complainant.Nationality</p>
+
+                            <p><b>Tel. :</b> @Model.complainant.Tel_Number</p>
+
+                            <p><b>Fax :</b> @Model.complainant.FaxNumber</p>
+
+                            <p><b>Email :</b> @Model.complainant.EmailAddress</p>
+
+                            <p><b>P.O. Box :</b> @Model.complainant.PO_Box</p>
+                        </div>
+                    </div>
+                </div>
+
+                @{
+                    if (Model.complaint.Type == "Corporate")
+                    {
+                        <div class="col-md-4">
+                            <div class="panel panel-ecb">
+                                <div class="panel-heading">
+                                    <center><h4>Body Corporate Information</h4></center>
+                                </div>
+                                <div class="panel-body">
+
+                                    @* This is where the country goes *@
+                                    <p><b>Country of Origin :</b> @Model.body_corporate.CountryofOrigin</p>
+
+                                    <p><b>Organisation :</b> @Model.body_corporate.Body_Name</p>
+
+                                    <p><b>Registration # :</b> @Model.body_corporate.Registration_Number</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+                <div class="col-md-4">
+                    <div class="panel panel-ecb">
+                        <div class="panel-heading">
+                            <center><h4>Representation Documents</h4></center>
+                        </div>
+                        <div class="panel-body">
+                            <a class="btn btn-block btn-primary btn-group-sm" href="/Complaint/getFile/@ViewBag.repId" target="_blank">View Representation Proof</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel panel-ecb">
+                        <div class="panel-heading">
+                            <center><h4>Advisor Details</h4></center>
+                        </div>
+                        <div class="panel-body">
+                            <p><b>Name :</b> @Model.advisor.FirstName @Model.advisor.LastName</p>
+
+                            <p><b>Address :</b> @Model.advisor.Address</p>
+
+                            <p><b>Work Tel. :</b> @Model.advisor.WorkTel</p>
+
+                            <p><b>Cell :</b> @Model.advisor.Cell</p>
+
+                            <p><b>Email :</b> @Model.advisor.EmailAddress</p>
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <button type="submit" class="btn btn-block btn-success">Submit Complaint</button>
+                        </div>
+                    </div>*@
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="panel panel-ecb">
+                        <div class="panel-heading">
+                            <center><h4>Assigned Assesors</h4></center>
+                        </div>
+                        <div class="panel-body">
+                            @{
+                                foreach (var item in Model.assesors)
+                                {
+                                    <div class="panel panel-ecb col-md-4">
+                                        <div class="panel-body">
+                                            <p><b>Name :</b> @item.Firstname @item.Lastname</p>
+
+                                            <p><b>Department :</b> @item.Department </p>
+
+                                            <p><b>Position :</b> @item.Position </p>
+
+                                            <p><b>Email :</b> @item.Email </p>
+
+                                            <p><b>Work Tel. :</b> TO BE DISCUSSED </p>
+
+                                            <a href="#" class="btn btn-danger btn-block">Remove Assesor</a>
+
+                                        </div>
+                                    </div>
+                                }
+                            }
+
+                            @*<div class="panel panel-ecb col-md-4">
+                                <div class="panel-body">
+                                    <p><b>Name :</b> Donovan Maasz</p>
+
+                                    <p><b>Department :</b> Finance & Administration</p>
+
+                                    <p><b>Position :</b> I.T. Technician</p>
+
+                                    <p><b>Email :</b> dmaasz@ecb.org.na</p>
+
+                                    <p><b>Work Tel. :</b> TO BE DISCUSSED </p>
+
+                                    <a href="#" class="btn btn-danger btn-block">Remove Assesor</a>
+                                </div>
+                            </div>*@ 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-ecb">
+                        <div class="panel-heading">
+                            <center><h4>Add Assesor</h4></center>
+                        </div>
+                        <div class="panel-body">
+                            <select multiple="" class="form-control" id="userSelect" size="10">
+                                @*<option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                <option>9</option>
+                                <option>10</option>*@
+                            </select>
+                            <br />
+                            <button class="btn btn-success btn-block" onclick="AssignUsers()">Add Assesors</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+            $.ajax({
+                type: "GET",
+                url: "/Administration/GetUsers/@Model.complaint.Id",
+                contentType: "application/json;charset=utf-8",
+
+                //HERE
+                dataType: 'json',
+                success: function (result) {
+                    for (i = 0; i < result.list.length; i++) {
+                        var x = document.getElementById("userSelect");
+                        var option = document.createElement("option");
+                        option.text = result.list[i];
+                        x.add(option);
+                    }
+
+                    //alert(result[0].value);
+                },
+                error: function (xhr, status, err) {
+                    alert(err.toString(), 'Error - LoadListItemsHelper');
+                }
+            });
+
+            function AssignUsers() {
+
+                var stringArray = new Array();
+
+                for (i = 0; i < $('select > option:selected').length; i++) {
+                    stringArray[i] = $('select > option:selected')[i].value;
+                }
+
+                var postData = { values: stringArray, id : @Model.complaint.Id };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Administration/SaveAssesors",
+                    data: postData,
+                    success: function (data) {
+                        alert(data.Result);
+                        location.reload();
+                    },
+                    dataType: "json",
+                    traditional: true
+                });
+
+            }
+
+    </script>
+}

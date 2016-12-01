@@ -170,6 +170,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\ComplainantController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -178,6 +179,9 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Controllers\ComplaintController.cs" />
     <Compile Include="Models\Data Models\Advisor.cs">
+      <DependentUpon>CCH_Entities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Data Models\Assistant.cs">
       <DependentUpon>CCH_Entities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Data Models\Attachments.cs">
@@ -222,6 +226,7 @@
     <Compile Include="Models\View Models\ComplaintViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\View Models\CreateComplaintViewModels.cs" />
+    <Compile Include="Models\View Models\ManageViewModel.cs" />
     <Compile Include="Models\View Models\ResponseViewModel.cs" />
     <Compile Include="Models\View Models\SubmitResponseViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -437,6 +442,8 @@
     <Content Include="Content\bootstrap-datepicker-master\tests\suites\timezone.js" />
     <Content Include="Content\bootstrap-datepicker-master\tests\tests.html" />
     <Content Include="Content\bootstrap-datepicker-master\tests\timezone.html" />
+    <Content Include="Content\bootstrap-duallistbox.css" />
+    <Content Include="Content\bootstrap-duallistbox.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\FormStyles.css" />
@@ -536,6 +543,8 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.bootstrap-duallistbox.js" />
+    <Content Include="Scripts\jquery.bootstrap-duallistbox.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -595,6 +604,8 @@
     <Content Include="Views\Complainant\_Complaints.cshtml" />
     <Content Include="Views\Complainant\_Responses.cshtml" />
     <Content Include="Views\Complainant\_SubmitResponse.cshtml" />
+    <Content Include="Views\Administration\Index.cshtml" />
+    <Content Include="Views\Administration\ManageComplaint.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -13,6 +13,7 @@
     <EntitySet Name="BodyCorporates" EntityType="CCH_Entities.Store.BodyCorporates" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Customer_Response" EntityType="CCH_Entities.Store.Customer_Response" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Attachments" EntityType="CCH_Entities.Store.Attachments" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Assistants" EntityType="CCH_Entities.Store.Assistants" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="CompliantBodyCorporate" Association="CCH_Entities.Store.CompliantBodyCorporate">
       <End Role="Compliant" EntitySet="Compliants" />
       <End Role="BodyCorporate" EntitySet="BodyCorporates" />
@@ -36,6 +37,10 @@
     <AssociationSet Name="AttachmentsCustomer_Response" Association="CCH_Entities.Store.AttachmentsCustomer_Response">
       <End Role="Attachments" EntitySet="Attachments" />
       <End Role="Customer_Response" EntitySet="Customer_Response" />
+    </AssociationSet>
+    <AssociationSet Name="AssistantCompliant" Association="CCH_Entities.Store.AssistantCompliant">
+      <End Role="Assistant" EntitySet="Assistants" />
+      <End Role="Compliant" EntitySet="Compliants" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Compliants">
@@ -111,6 +116,7 @@
     <Property Name="Message_Body" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Date_Created" Type="datetime" Nullable="false" />
     <Property Name="Parent_Message_Id" Type="bigint" Nullable="false" />
+    <Property Name="From" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Compliant_Id" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Attachments">
@@ -121,6 +127,14 @@
     <Property Name="Location" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Date_Created" Type="datetime" Nullable="false" />
     <Property Name="Customer_Response_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Assistants">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Username" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Compliant_Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="CompliantBodyCorporate">
     <End Role="Compliant" Type="CCH_Entities.Store.Compliants" Multiplicity="1" />
@@ -194,6 +208,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="AssistantCompliant">
+    <End Role="Assistant" Type="CCH_Entities.Store.Assistants" Multiplicity="*" />
+    <End Role="Compliant" Type="CCH_Entities.Store.Compliants" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Compliant">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Assistant">
+        <PropertyRef Name="Compliant_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -230,6 +256,11 @@
             <End Role="Attachments" EntitySet="Attachments" />
             <End Role="Customer_Response" EntitySet="Customer_Response" />
           </AssociationSet>
+          <EntitySet Name="Assistants" EntityType="CCH_Entities.Assistant" />
+          <AssociationSet Name="AssistantCompliant" Association="CCH_Entities.AssistantCompliant">
+            <End Role="Assistant" EntitySet="Assistants" />
+            <End Role="Compliant" EntitySet="Compliants" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Compliant">
           <Key>
@@ -251,6 +282,7 @@
           <Property Name="Heading" Type="String" Nullable="false" />
           <Property Name="Status" Type="String" Nullable="false" />
           <NavigationProperty Name="Customer_Response" Relationship="CCH_Entities.Response_Compliant" FromRole="Compliant" ToRole="Customer_Response" />
+          <NavigationProperty Name="Assistants" Relationship="CCH_Entities.AssistantCompliant" FromRole="Compliant" ToRole="Assistant" />
         </EntityType>
         <EntityType Name="Representation">
           <Key>
@@ -327,6 +359,7 @@
           <Property Name="Parent_Message_Id" Type="Int64" Nullable="false" />
           <NavigationProperty Name="Compliant" Relationship="CCH_Entities.Response_Compliant" FromRole="Customer_Response" ToRole="Compliant" />
           <NavigationProperty Name="Attachments" Relationship="CCH_Entities.AttachmentsCustomer_Response" FromRole="Customer_Response" ToRole="Attachments" />
+          <Property Name="From" Type="String" Nullable="false" />
         </EntityType>
         <Association Name="Response_Compliant">
           <End Type="CCH_Entities.Customer_Response" Role="Customer_Response" Multiplicity="*" />
@@ -344,6 +377,18 @@
         <Association Name="AttachmentsCustomer_Response">
           <End Type="CCH_Entities.Attachments" Role="Attachments" Multiplicity="*" />
           <End Type="CCH_Entities.Customer_Response" Role="Customer_Response" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Assistant">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" Nullable="false" />
+          <NavigationProperty Name="Compliant" Relationship="CCH_Entities.AssistantCompliant" FromRole="Assistant" ToRole="Compliant" />
+        </EntityType>
+        <Association Name="AssistantCompliant">
+          <End Type="CCH_Entities.Assistant" Role="Assistant" Multiplicity="*" />
+          <End Type="CCH_Entities.Compliant" Role="Compliant" Multiplicity="1" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -424,6 +469,7 @@
           <ScalarProperty Name="Message_Body" ColumnName="Message_Body" />
           <ScalarProperty Name="Date_Created" ColumnName="Date_Created" />
           <ScalarProperty Name="Parent_Message_Id" ColumnName="Parent_Message_Id" />
+          <ScalarProperty Name="From" ColumnName="From" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -433,6 +479,14 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Location" ColumnName="Location" />
           <ScalarProperty Name="Date_Created" ColumnName="Date_Created" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Assistants">
+      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Assistant)">
+        <MappingFragment StoreEntitySet="Assistants">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -481,6 +535,14 @@
         <ScalarProperty Name="Id" ColumnName="Customer_Response_Id" />
       </EndProperty>
       <EndProperty Name="Attachments">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AssistantCompliant" TypeName="CCH_Entities.AssistantCompliant" StoreEntitySet="Assistants">
+      <EndProperty Name="Compliant">
+        <ScalarProperty Name="Id" ColumnName="Compliant_Id" />
+      </EndProperty>
+      <EndProperty Name="Assistant">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

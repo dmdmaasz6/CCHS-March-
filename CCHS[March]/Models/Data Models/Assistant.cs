@@ -12,21 +12,11 @@ namespace CCHS_March_.Models.Data_Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Customer_Response
+    public partial class Assistant
     {
-        public Customer_Response()
-        {
-            this.Attachments = new HashSet<Attachments>();
-        }
-    
         public int Id { get; set; }
-        public string Subject { get; set; }
-        public string Message_Body { get; set; }
-        public System.DateTime Date_Created { get; set; }
-        public long Parent_Message_Id { get; set; }
-        public string From { get; set; }
+        public string Username { get; set; }
     
         public virtual Compliant Compliant { get; set; }
-        public virtual ICollection<Attachments> Attachments { get; set; }
     }
 }

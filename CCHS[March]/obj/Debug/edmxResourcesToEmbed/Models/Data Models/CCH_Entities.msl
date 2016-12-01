@@ -74,6 +74,7 @@
           <ScalarProperty Name="Message_Body" ColumnName="Message_Body" />
           <ScalarProperty Name="Date_Created" ColumnName="Date_Created" />
           <ScalarProperty Name="Parent_Message_Id" ColumnName="Parent_Message_Id" />
+          <ScalarProperty Name="From" ColumnName="From" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -83,6 +84,14 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Location" ColumnName="Location" />
           <ScalarProperty Name="Date_Created" ColumnName="Date_Created" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Assistants">
+      <EntityTypeMapping TypeName="IsTypeOf(CCH_Entities.Assistant)">
+        <MappingFragment StoreEntitySet="Assistants">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -131,6 +140,14 @@
         <ScalarProperty Name="Id" ColumnName="Customer_Response_Id" />
       </EndProperty>
       <EndProperty Name="Attachments">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AssistantCompliant" TypeName="CCH_Entities.AssistantCompliant" StoreEntitySet="Assistants">
+      <EndProperty Name="Compliant">
+        <ScalarProperty Name="Id" ColumnName="Compliant_Id" />
+      </EndProperty>
+      <EndProperty Name="Assistant">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

@@ -59,7 +59,7 @@ namespace CCHS_March_.Controllers
                 if (user != null)
                 {
                     await SignInAsync(user, model.RememberMe);
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index", "Administration", null);
                 }
                 else
                 {

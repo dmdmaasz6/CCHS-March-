@@ -32,6 +32,11 @@
       <End Role="Attachments" EntitySet="Attachments" />
       <End Role="Customer_Response" EntitySet="Customer_Response" />
     </AssociationSet>
+    <EntitySet Name="Assistants" EntityType="CCH_Entities.Assistant" />
+    <AssociationSet Name="AssistantCompliant" Association="CCH_Entities.AssistantCompliant">
+      <End Role="Assistant" EntitySet="Assistants" />
+      <End Role="Compliant" EntitySet="Compliants" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Compliant">
     <Key>
@@ -53,6 +58,7 @@
     <Property Name="Heading" Type="String" Nullable="false" />
     <Property Name="Status" Type="String" Nullable="false" />
     <NavigationProperty Name="Customer_Response" Relationship="CCH_Entities.Response_Compliant" FromRole="Compliant" ToRole="Customer_Response" />
+    <NavigationProperty Name="Assistants" Relationship="CCH_Entities.AssistantCompliant" FromRole="Compliant" ToRole="Assistant" />
   </EntityType>
   <EntityType Name="Representation">
     <Key>
@@ -129,6 +135,7 @@
     <Property Name="Parent_Message_Id" Type="Int64" Nullable="false" />
     <NavigationProperty Name="Compliant" Relationship="CCH_Entities.Response_Compliant" FromRole="Customer_Response" ToRole="Compliant" />
     <NavigationProperty Name="Attachments" Relationship="CCH_Entities.AttachmentsCustomer_Response" FromRole="Customer_Response" ToRole="Attachments" />
+    <Property Name="From" Type="String" Nullable="false" />
   </EntityType>
   <Association Name="Response_Compliant">
     <End Type="CCH_Entities.Customer_Response" Role="Customer_Response" Multiplicity="*" />
@@ -146,5 +153,17 @@
   <Association Name="AttachmentsCustomer_Response">
     <End Type="CCH_Entities.Attachments" Role="Attachments" Multiplicity="*" />
     <End Type="CCH_Entities.Customer_Response" Role="Customer_Response" Multiplicity="1" />
+  </Association>
+  <EntityType Name="Assistant">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" Nullable="false" />
+    <NavigationProperty Name="Compliant" Relationship="CCH_Entities.AssistantCompliant" FromRole="Assistant" ToRole="Compliant" />
+  </EntityType>
+  <Association Name="AssistantCompliant">
+    <End Type="CCH_Entities.Assistant" Role="Assistant" Multiplicity="*" />
+    <End Type="CCH_Entities.Compliant" Role="Compliant" Multiplicity="1" />
   </Association>
 </Schema>

@@ -17,6 +17,7 @@ namespace CCHS_March_.Models.Data_Models
         public Compliant()
         {
             this.Customer_Response = new HashSet<Customer_Response>();
+            this.Assistants = new HashSet<Assistant>();
         }
     
         public int Id { get; set; }
@@ -36,5 +37,6 @@ namespace CCHS_March_.Models.Data_Models
         public virtual Complainant Complainant { get; set; }
         public virtual Representation Representation { get; set; }
         public virtual ICollection<Customer_Response> Customer_Response { get; set; }
+        public virtual ICollection<Assistant> Assistants { get; set; }
     }
 }

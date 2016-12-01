@@ -1,7 +1,14 @@
 ﻿@model IEnumerable<CCHS_March_.Models.Data_Models.Customer_Response>
 @using GridMvc.Html
 
-<center><h3>Complaint Responses</h3></center>
+<center><h3>Complaint Responses</h3></center> 
+
+@{
+    if (User.Identity.Name != null)
+    {
+        <a href="/Administration/ManageComplaint/@Session["Complaint"]" class="btn btn-info pull-right">Manage</a>
+    }
+}
 
 @Html.Grid(Model).Named("ResponsesGrid").Columns(columns =>
 {

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/28/2016 03:41:41
+-- Date Created: 11/30/2016 22:41:27
 -- Generated from EDMX file: C:\Users\Admin\Documents\GitHub\CCHS[March]]\CCHS[March]]\Models\Data Models\CCH_Entities.edmx
 -- --------------------------------------------------
 
@@ -29,6 +29,15 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_RepresentationCompliant]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Representations] DROP CONSTRAINT [FK_RepresentationCompliant];
 GO
+IF OBJECT_ID(N'[dbo].[FK_Response_Compliant]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Customer_Response] DROP CONSTRAINT [FK_Response_Compliant];
+GO
+IF OBJECT_ID(N'[dbo].[FK_AttachmentsCustomer_Response]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Attachments] DROP CONSTRAINT [FK_AttachmentsCustomer_Response];
+GO
+IF OBJECT_ID(N'[dbo].[FK_AssistantCompliant]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Assistants] DROP CONSTRAINT [FK_AssistantCompliant];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -48,6 +57,15 @@ IF OBJECT_ID(N'[dbo].[Advisors]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[BodyCorporates]', 'U') IS NOT NULL
     DROP TABLE [dbo].[BodyCorporates];
+GO
+IF OBJECT_ID(N'[dbo].[Customer_Response]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Customer_Response];
+GO
+IF OBJECT_ID(N'[dbo].[Attachments]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Attachments];
+GO
+IF OBJECT_ID(N'[dbo].[Assistants]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Assistants];
 GO
 
 -- --------------------------------------------------
@@ -125,6 +143,7 @@ CREATE TABLE [dbo].[Customer_Response] (
     [Message_Body] nvarchar(max)  NOT NULL,
     [Date_Created] datetime  NOT NULL,
     [Parent_Message_Id] bigint  NOT NULL,
+    [From] nvarchar(max)  NOT NULL,
     [Compliant_Id] int  NOT NULL
 );
 GO
@@ -135,6 +154,14 @@ CREATE TABLE [dbo].[Attachments] (
     [Location] nvarchar(max)  NOT NULL,
     [Date_Created] datetime  NOT NULL,
     [Customer_Response_Id] int  NOT NULL
+);
+GO
+
+-- Creating table 'Assistants'
+CREATE TABLE [dbo].[Assistants] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Username] nvarchar(max)  NOT NULL,
+    [Compliant_Id] int  NOT NULL
 );
 GO
 
@@ -181,6 +208,12 @@ GO
 -- Creating primary key on [Id] in table 'Attachments'
 ALTER TABLE [dbo].[Attachments]
 ADD CONSTRAINT [PK_Attachments]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Assistants'
+ALTER TABLE [dbo].[Assistants]
+ADD CONSTRAINT [PK_Assistants]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -270,6 +303,20 @@ ADD CONSTRAINT [FK_AttachmentsCustomer_Response]
 CREATE INDEX [IX_FK_AttachmentsCustomer_Response]
 ON [dbo].[Attachments]
     ([Customer_Response_Id]);
+GO
+
+-- Creating foreign key on [Compliant_Id] in table 'Assistants'
+ALTER TABLE [dbo].[Assistants]
+ADD CONSTRAINT [FK_AssistantCompliant]
+    FOREIGN KEY ([Compliant_Id])
+    REFERENCES [dbo].[Compliants]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_AssistantCompliant'
+CREATE INDEX [IX_FK_AssistantCompliant]
+ON [dbo].[Assistants]
+    ([Compliant_Id]);
 GO
 
 -- --------------------------------------------------
